@@ -326,6 +326,53 @@ async function createMessage(messageData) {
     }
 }
 
+// Функции для управления пользователями
+async function getAllUsers() {
+    try {
+        const [rows] = await pool.execute('SELECT id, username, fullName, email, role, points, created_at FROM users ORDER BY created_at DESC');
+        return { success: true, users: rows };
+    } catch (error) {
+        console.error('Ошибка получения пользователей:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+async function updateUser(userId, userData) {
+    try {
+        const [result] = await pool.execute(
+            'UPDATE users SET fullName = ?, email = ? WHERE id = ?',
+            [userData.fullName, userData.email, userId]
+        );
+        return { success: true };
+    } catch (error) {
+        console.error('Ошибка обновления пользователя:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+async function updateUserRole(userId, role) {
+    try {
+        await pool.execute(
+            'UPDATE users SET role = ? WHERE id = ?',
+            [role, userId]
+        );
+        return { success: true };
+    } catch (error) {
+        console.error('Ошибка обновления роли пользователя:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+async function deleteUser(userId) {
+    try {
+        await pool.execute('DELETE FROM users WHERE id = ?', [userId]);
+        return { success: true };
+    } catch (error) {
+        console.error('Ошибка удаления пользователя:', error);
+        return { success: false, error: error.message };
+    }
+}
+
 module.exports = {
     initializeDatabase,
     createUser,
@@ -344,5 +391,9 @@ module.exports = {
     createChat,
     updateChatLastMessage,
     getChatMessages,
-    createMessage
+    createMessage,
+    getAllUsers,
+    updateUser,
+    updateUserRole,
+    deleteUser
 }; 

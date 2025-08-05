@@ -27,7 +27,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "node server.js",
-    "server-multi": "node server-multi.js",
     "api-server": "node start-server.js",
     "production": "node start-production.js",
     "check-server": "node check-server.js"
