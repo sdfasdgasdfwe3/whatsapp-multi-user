@@ -589,6 +589,95 @@ app.get('/api/products/:id', (req, res) => {
     }
 });
 
+// Добавить новый продукт (только для администраторов)
+app.post('/api/products', (req, res) => {
+    try {
+        const { name, price, description, image, category } = req.body;
+        
+        if (!name || !price || !description) {
+            return res.status(400).json({ success: false, error: 'Missing required fields' });
+        }
+        
+        const db = loadDatabase();
+        const newProduct = {
+            id: Date.now(),
+            name,
+            price,
+            description,
+            image: image || `https://via.placeholder.com/300x200?text=${encodeURIComponent(name)}`,
+            category: category || 'Другое',
+            createdAt: new Date().toISOString()
+        };
+        
+        if (!db.products) {
+            db.products = [];
+        }
+        
+        db.products.push(newProduct);
+        saveDatabase(db);
+        
+        res.json({ success: true, product: newProduct });
+    } catch (error) {
+        console.error('Error creating product:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Обновить продукт (только для администраторов)
+app.put('/api/products/:id', (req, res) => {
+    try {
+        const productId = parseInt(req.params.id);
+        const { name, price, description, image, category } = req.body;
+        
+        const db = loadDatabase();
+        const productIndex = (db.products || []).findIndex(p => p.id === productId);
+        
+        if (productIndex === -1) {
+            return res.status(404).json({ success: false, error: 'Product not found' });
+        }
+        
+        const updatedProduct = {
+            ...db.products[productIndex],
+            name: name || db.products[productIndex].name,
+            price: price || db.products[productIndex].price,
+            description: description || db.products[productIndex].description,
+            image: image || db.products[productIndex].image,
+            category: category || db.products[productIndex].category
+        };
+        
+        db.products[productIndex] = updatedProduct;
+        saveDatabase(db);
+        
+        res.json({ success: true, product: updatedProduct });
+    } catch (error) {
+        console.error('Error updating product:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Удалить продукт (только для администраторов)
+app.delete('/api/products/:id', (req, res) => {
+    try {
+        const productId = parseInt(req.params.id);
+        const db = loadDatabase();
+        
+        const productIndex = (db.products || []).findIndex(p => p.id === productId);
+        
+        if (productIndex === -1) {
+            return res.status(404).json({ success: false, error: 'Product not found' });
+        }
+        
+        const deletedProduct = db.products[productIndex];
+        db.products.splice(productIndex, 1);
+        saveDatabase(db);
+        
+        res.json({ success: true, message: 'Product deleted successfully', product: deletedProduct });
+    } catch (error) {
+        console.error('Error deleting product:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // API для статей
 app.get('/api/articles', (req, res) => {
     try {
@@ -613,6 +702,96 @@ app.get('/api/articles/:id', (req, res) => {
         res.json({ success: true, article });
     } catch (error) {
         console.error('Error getting article:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Добавить новую статью (только для администраторов)
+app.post('/api/articles', (req, res) => {
+    try {
+        const { title, content, author, category, image } = req.body;
+        
+        if (!title || !content) {
+            return res.status(400).json({ success: false, error: 'Missing required fields' });
+        }
+        
+        const db = loadDatabase();
+        const newArticle = {
+            id: Date.now(),
+            title,
+            date: new Date().toISOString().split('T')[0],
+            content,
+            image: image || `https://via.placeholder.com/300x200?text=${encodeURIComponent(title)}`,
+            author: author || 'Администратор',
+            category: category || 'Общее',
+            createdAt: new Date().toISOString()
+        };
+        
+        if (!db.articles) {
+            db.articles = [];
+        }
+        
+        db.articles.push(newArticle);
+        saveDatabase(db);
+        
+        res.json({ success: true, article: newArticle });
+    } catch (error) {
+        console.error('Error creating article:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Обновить статью (только для администраторов)
+app.put('/api/articles/:id', (req, res) => {
+    try {
+        const articleId = parseInt(req.params.id);
+        const { title, content, author, category, image } = req.body;
+        
+        const db = loadDatabase();
+        const articleIndex = (db.articles || []).findIndex(a => a.id === articleId);
+        
+        if (articleIndex === -1) {
+            return res.status(404).json({ success: false, error: 'Article not found' });
+        }
+        
+        const updatedArticle = {
+            ...db.articles[articleIndex],
+            title: title || db.articles[articleIndex].title,
+            content: content || db.articles[articleIndex].content,
+            author: author || db.articles[articleIndex].author,
+            category: category || db.articles[articleIndex].category,
+            image: image || db.articles[articleIndex].image
+        };
+        
+        db.articles[articleIndex] = updatedArticle;
+        saveDatabase(db);
+        
+        res.json({ success: true, article: updatedArticle });
+    } catch (error) {
+        console.error('Error updating article:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Удалить статью (только для администраторов)
+app.delete('/api/articles/:id', (req, res) => {
+    try {
+        const articleId = parseInt(req.params.id);
+        const db = loadDatabase();
+        
+        const articleIndex = (db.articles || []).findIndex(a => a.id === articleId);
+        
+        if (articleIndex === -1) {
+            return res.status(404).json({ success: false, error: 'Article not found' });
+        }
+        
+        const deletedArticle = db.articles[articleIndex];
+        db.articles.splice(articleIndex, 1);
+        saveDatabase(db);
+        
+        res.json({ success: true, message: 'Article deleted successfully', article: deletedArticle });
+    } catch (error) {
+        console.error('Error deleting article:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
