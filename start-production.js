@@ -159,6 +159,40 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
+// WhatsApp эндпоинты (заглушки для совместимости)
+app.get('/api/whatsapp/status/:userId', (req, res) => {
+    res.json({
+        connected: false,
+        qrCode: null,
+        initializing: false
+    });
+});
+
+app.get('/api/whatsapp/qr/:userId', (req, res) => {
+    res.json({ 
+        error: 'WhatsApp functionality not available in production server. Use server.js for WhatsApp features.' 
+    });
+});
+
+app.post('/api/whatsapp/send/:userId', async (req, res) => {
+    res.status(400).json({ 
+        error: 'WhatsApp functionality not available in production server. Use server.js for WhatsApp features.' 
+    });
+});
+
+app.get('/api/whatsapp/chats/:userId', async (req, res) => {
+    res.status(400).json({ 
+        error: 'WhatsApp functionality not available in production server. Use server.js for WhatsApp features.' 
+    });
+});
+
+app.post('/api/whatsapp/disconnect/:userId', async (req, res) => {
+    res.json({ 
+        success: true, 
+        message: 'WhatsApp functionality not available in production server' 
+    });
+});
+
 // Обработчик ошибок
 app.use((error, req, res, next) => {
     console.error('Ошибка сервера:', error);
