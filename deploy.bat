@@ -1,0 +1,9 @@
+@echo off
+echo Adding files...
+git add .
+echo Committing changes...
+git commit -m "Add debug tools for login issue"
+echo Pushing to server...
+git push
+echo Done!
+pause 

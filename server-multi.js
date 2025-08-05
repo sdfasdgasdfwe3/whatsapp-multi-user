@@ -537,6 +537,30 @@ app.delete('/api/admin/users/:userId', (req, res) => {
     res.json({ success: true, message: 'User deleted successfully' });
 });
 
+// Отладочный endpoint для проверки базы данных (временно)
+app.get('/api/debug/database', (req, res) => {
+    try {
+        const db = loadDatabase();
+        const usersForDebug = db.users.map(user => ({
+            id: user.id,
+            username: user.username,
+            password: user.password ? user.password.substring(0, 3) + '***' : 'no password',
+            fullName: user.fullName,
+            role: user.role
+        }));
+        
+        res.json({
+            success: true,
+            usersCount: db.users.length,
+            users: usersForDebug,
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        console.error('Debug database error:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 app.listen(port, () => {
     console.log(`Multi-user WhatsApp server running on port ${port}`);
 }); 
