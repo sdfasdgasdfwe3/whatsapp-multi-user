@@ -27,7 +27,7 @@ jobs:
         # Создаем архив для деплоя
         zip -r deploy.zip . -x "node_modules/*" ".wwebjs_auth/*" ".wwebjs_cache/*" ".git/*" "*.log"
         
-    - name: Prepare server directory
+    - name: Deploy to server
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: server276.hosting.reg.ru
@@ -36,23 +36,23 @@ jobs:
         port: 22
         script: |
           # Создаем папку если её нет
-          mkdir -p /home/u3217624/domains/znam.fun/public_html
-          cd /home/u3217624/domains/znam.fun/public_html
+          mkdir -p /var/www/u3217624/data/znam.fun
+          cd /var/www/u3217624/data/znam.fun
+          
+          # Останавливаем текущий процесс если он запущен
+          pkill -f "node server-multi.js" 2>/dev/null || true
           
           # Очищаем старые файлы
           rm -rf *
           
-    - name: Deploy to server
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: server276.hosting.reg.ru
-        username: u3217624
-        password: ${{ secrets.HOSTING_PASSWORD }}
-        port: 22
-        source: "deploy.zip"
-        target: "/home/u3217624/domains/znam.fun/public_html"
+        script_stop: true
         
-    - name: Execute deployment commands
+    - name: Upload files
+      run: |
+        # Копируем файлы на сервер
+        scp -o StrictHostKeyChecking=no -P 22 deploy.zip u3217624@server276.hosting.reg.ru:/var/www/u3217624/data/znam.fun/
+        
+    - name: Setup and start server
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: server276.hosting.reg.ru
@@ -60,10 +60,7 @@ jobs:
         password: ${{ secrets.HOSTING_PASSWORD }}
         port: 22
         script: |
-          cd /home/u3217624/domains/znam.fun/public_html
-          
-          # Останавливаем текущий процесс если он запущен
-          pm2 delete znam-whatsapp 2>/dev/null || true
+          cd /var/www/u3217624/data/znam.fun
           
           # Распаковываем архив
           unzip -o deploy.zip
@@ -72,28 +69,26 @@ jobs:
           # Устанавливаем зависимости
           npm install --production
           
-          # Создаем конфигурацию PM2 если её нет
-          if [ ! -f ecosystem.config.js ]; then
-            cat > ecosystem.config.js << 'EOF'
-            module.exports = {
-              apps: [{
-                name: 'znam-whatsapp',
-                script: 'server-multi.js',
-                instances: 1,
-                autorestart: true,
-                watch: false,
-                max_memory_restart: '1G',
-                env: {
-                  NODE_ENV: 'production',
-                  PORT: 3001
-                }
-              }]
-            };
-            EOF
-          fi
+          # Создаем скрипт запуска
+          cat > start.sh << 'EOF'
+          #!/bin/bash
+          cd /var/www/u3217624/data/znam.fun
+          node server-multi.js > app.log 2>&1 &
+          echo $! > app.pid
+          echo "Server started with PID $(cat app.pid)"
+          EOF
+          
+          chmod +x start.sh
           
           # Запускаем сервер
-          pm2 start ecosystem.config.js
-          pm2 save
+          ./start.sh
+          
+          # Создаем .htaccess для прокси
+          cat > .htaccess << 'EOF'
+          RewriteEngine On
+          RewriteCond %{REQUEST_FILENAME} !-f
+          RewriteCond %{REQUEST_FILENAME} !-d
+          RewriteRule ^(.*)$ http://localhost:3001/$1 [P,L]
+          EOF
           
           echo "Deployment completed successfully!" 
