@@ -34,23 +34,40 @@ jobs:
         username: u3217624
         password: ${{ secrets.HOSTING_PASSWORD }}
         port: 22
+        timeout: 30s
+        command_timeout: 10m
         script: |
+          echo "Starting deployment process..."
+          
           # Создаем папку если её нет
           mkdir -p /var/www/u3217624/data/znam.fun
+          echo "Directory created/verified"
+          
           cd /var/www/u3217624/data/znam.fun
+          echo "Changed to deployment directory: $(pwd)"
           
           # Останавливаем текущий процесс если он запущен
+          echo "Stopping existing processes..."
           pkill -f "node server-multi.js" 2>/dev/null || true
+          sleep 2
           
           # Очищаем старые файлы
+          echo "Cleaning old files..."
           rm -rf *
+          echo "Cleanup completed"
           
         script_stop: true
         
     - name: Upload files
-      run: |
-        # Копируем файлы на сервер
-        scp -o StrictHostKeyChecking=no -P 22 deploy.zip u3217624@server276.hosting.reg.ru:/var/www/u3217624/data/znam.fun/
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: server276.hosting.reg.ru
+        username: u3217624
+        password: ${{ secrets.HOSTING_PASSWORD }}
+        port: 22
+        source: "deploy.zip"
+        target: "/var/www/u3217624/data/znam.fun/"
+        timeout: 30s
         
     - name: Setup and start server
       uses: appleboy/ssh-action@v1.0.3
@@ -59,17 +76,26 @@ jobs:
         username: u3217624
         password: ${{ secrets.HOSTING_PASSWORD }}
         port: 22
+        timeout: 30s
+        command_timeout: 10m
         script: |
+          echo "Setting up server..."
           cd /var/www/u3217624/data/znam.fun
+          echo "Current directory: $(pwd)"
           
           # Распаковываем архив
+          echo "Extracting deployment package..."
           unzip -o deploy.zip
           rm -f deploy.zip
+          echo "Package extracted"
           
           # Устанавливаем зависимости
+          echo "Installing dependencies..."
           npm install --production
+          echo "Dependencies installed"
           
           # Создаем скрипт запуска
+          echo "Creating startup script..."
           cat > start.sh << 'EOF'
           #!/bin/bash
           cd /var/www/u3217624/data/znam.fun
@@ -79,9 +105,27 @@ jobs:
           EOF
           
           chmod +x start.sh
+          echo "Startup script created"
           
           # Запускаем сервер
+          echo "Starting server..."
           ./start.sh
+          
+          # Проверяем что сервер запустился
+          sleep 3
+          if [ -f app.pid ]; then
+            PID=$(cat app.pid)
+            if kill -0 $PID 2>/dev/null; then
+              echo "Server is running with PID $PID"
+            else
+              echo "Server failed to start"
+              cat app.log
+              exit 1
+            fi
+          else
+            echo "PID file not created"
+            exit 1
+          fi
           
           # Создаем .htaccess для прокси
           cat > .htaccess << 'EOF'
