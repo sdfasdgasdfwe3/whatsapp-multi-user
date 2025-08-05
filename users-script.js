@@ -34,7 +34,7 @@ function checkAdminAccess() {
 // Загрузка пользователей
 async function loadUsers() {
     try {
-        const response = await fetch('http://89.104.66.62/api/admin/users');
+        const response = await fetch('http://89.104.66.62:3001/api/admin/users');
         const data = await response.json();
         
         users = data.users;
@@ -130,7 +130,7 @@ async function saveUserRole() {
     const newRole = document.getElementById('roleSelect').value;
     
     try {
-        const response = await fetch(`http://89.104.66.62/api/admin/users/${currentEditingUserId}/role`, {
+        const response = await fetch(`http://89.104.66.62:3001/api/admin/users/${currentEditingUserId}/role`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -161,7 +161,7 @@ async function deleteUser(userId, username) {
     }
     
     try {
-        const response = await fetch(`http://89.104.66.62/api/admin/users/${userId}`, {
+        const response = await fetch(`http://89.104.66.62:3001/api/admin/users/${userId}`, {
             method: 'DELETE'
         });
         

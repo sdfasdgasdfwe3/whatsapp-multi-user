@@ -29,7 +29,7 @@ async function checkWhatsAppStatus() {
             return;
         }
         
-        const response = await fetch(`http://89.104.66.62/api/whatsapp/status/${currentUser.id}`);
+        const response = await fetch(`http://89.104.66.62:3001/api/whatsapp/status/${currentUser.id}`);
         const data = await response.json();
         
         whatsappConnected = data.connected;
@@ -90,7 +90,7 @@ async function generateQRCodeInline() {
         
         // Получаем QR-код с сервера для конкретного пользователя
         console.log('Requesting QR code for user:', currentUser.id);
-        const response = await fetch(`http://89.104.66.62/api/whatsapp/qr/${currentUser.id}`);
+        const response = await fetch(`http://89.104.66.62:3001/api/whatsapp/qr/${currentUser.id}`);
         const data = await response.json();
         console.log('QR code response:', data);
         
@@ -136,7 +136,7 @@ async function generateQRCodeInline() {
                     return;
                 }
                 
-                const statusResponse = await fetch(`http://89.104.66.62/api/whatsapp/status/${currentUser.id}`);
+                const statusResponse = await fetch(`http://89.104.66.62:3001/api/whatsapp/status/${currentUser.id}`);
                 const statusData = await statusResponse.json();
                 
                 if (statusData.connected) {
@@ -180,7 +180,7 @@ async function disconnectWhatsApp() {
             return;
         }
         
-        const response = await fetch(`http://89.104.66.62/api/whatsapp/disconnect/${currentUser.id}`, {
+        const response = await fetch(`http://89.104.66.62:3001/api/whatsapp/disconnect/${currentUser.id}`, {
             method: 'POST'
         });
         const data = await response.json();
@@ -257,7 +257,7 @@ async function loadChatsInline() {
         
         console.log('Loading chats from server for user:', currentUser.id);
         // Получаем реальные чаты с сервера для конкретного пользователя
-        const response = await fetch(`http://89.104.66.62/api/whatsapp/chats/${currentUser.id}`);
+        const response = await fetch(`http://89.104.66.62:3001/api/whatsapp/chats/${currentUser.id}`);
         const data = await response.json();
         
         console.log('Server response:', data);
@@ -632,7 +632,7 @@ async function updateMainPageStatus() {
                 return;
             }
             
-            const response = await fetch(`http://89.104.66.62/api/whatsapp/status/${currentUser.id}`);
+            const response = await fetch(`http://89.104.66.62:3001/api/whatsapp/status/${currentUser.id}`);
             const data = await response.json();
             
             if (data.connected) {

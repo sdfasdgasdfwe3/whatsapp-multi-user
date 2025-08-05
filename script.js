@@ -80,7 +80,7 @@ async function handleLogin(event) {
     const password = document.getElementById('password').value;
     
     try {
-        const response = await fetch('http://89.104.66.62/api/auth/login', {
+        const response = await fetch('http://89.104.66.62:3001/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -131,7 +131,7 @@ async function handleRegister(event) {
     const username = fullName.toLowerCase().replace(/\s+/g, '') + Math.floor(Math.random() * 1000);
     
     try {
-        const response = await fetch('http://89.104.66.62/api/auth/register', {
+        const response = await fetch('http://89.104.66.62:3001/api/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -416,7 +416,7 @@ async function shareToWhatsApp(title, priceOrDate, description) {
         }
         
         // Проверяем статус WhatsApp для пользователя
-        const statusResponse = await fetch(`http://89.104.66.62/api/whatsapp/status/${currentUser.id}`);
+        const statusResponse = await fetch(`http://89.104.66.62:3001/api/whatsapp/status/${currentUser.id}`);
         const statusData = await statusResponse.json();
         
         if (!statusData.connected) {
@@ -438,7 +438,7 @@ async function shareToWhatsApp(title, priceOrDate, description) {
         
         for (const chatId of selectedChats) {
             try {
-                const response = await fetch(`http://89.104.66.62/api/whatsapp/send/${currentUser.id}`, {
+                const response = await fetch(`http://89.104.66.62:3001/api/whatsapp/send/${currentUser.id}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
