@@ -1,0 +1,82 @@
+name: Deploy to znam.fun
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Create deployment package
+      run: |
+        # Создаем архив для деплоя
+        zip -r deploy.zip . -x "node_modules/*" ".wwebjs_auth/*" ".wwebjs_cache/*" ".git/*" "*.log"
+        
+    - name: Deploy to server
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: server276.hosting.reg.ru
+        username: u3217624
+        password: ${{ secrets.HOSTING_PASSWORD }}
+        port: 22
+        source: "deploy.zip"
+        target: "/home/u3217624/domains/znam.fun/public_html/"
+        
+    - name: Execute deployment commands
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: server276.hosting.reg.ru
+        username: u3217624
+        password: ${{ secrets.HOSTING_PASSWORD }}
+        port: 22
+        script: |
+          cd /home/u3217624/domains/znam.fun/public_html/
+          
+          # Распаковываем архив
+          unzip -o deploy.zip
+          rm deploy.zip
+          
+          # Устанавливаем зависимости
+          npm install --production
+          
+          # Создаем конфигурацию PM2 если её нет
+          if [ ! -f ecosystem.config.js ]; then
+            cat > ecosystem.config.js << 'EOF'
+            module.exports = {
+              apps: [{
+                name: 'znam-whatsapp',
+                script: 'server-multi.js',
+                instances: 1,
+                autorestart: true,
+                watch: false,
+                max_memory_restart: '1G',
+                env: {
+                  NODE_ENV: 'production',
+                  PORT: 3001
+                }
+              }]
+            };
+            EOF
+          fi
+          
+          # Перезапускаем сервер
+          pm2 delete znam-whatsapp 2>/dev/null || true
+          pm2 start ecosystem.config.js
+          pm2 save
+          
+          echo "Deployment completed successfully!" 

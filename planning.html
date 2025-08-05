@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Планирование</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="main-container">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Планирование</span>
+            </div>
+            <div class="nav-user">
+                <a href="home.html" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    Главная
+                </a>
+                <span id="userName">Пользователь</span>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Выйти
+                </button>
+            </div>
+        </nav>
+        
+        <div class="main-content">
+            <div class="page-header">
+                <h1><i class="fas fa-calendar-alt"></i> Планирование задач</h1>
+                <p>Управляйте задачами, проектами и мероприятиями</p>
+            </div>
+            
+            <div class="planning-grid">
+                <div class="task-card urgent">
+                    <div class="task-header">
+                        <div class="task-priority urgent">Срочно</div>
+                        <div class="task-date">Сегодня</div>
+                    </div>
+                    <div class="task-content">
+                        <h3>Завершить разработку сайта</h3>
+                        <p>Доработать функциональность авторизации и добавить новые разделы</p>
+                        <div class="task-meta">
+                            <span class="category">Разработка</span>
+                            <span class="progress">75%</span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="btn-edit"><i class="fas fa-edit"></i></button>
+                        <button class="btn-complete"><i class="fas fa-check"></i></button>
+                    </div>
+                </div>
+                
+                <div class="task-card">
+                    <div class="task-header">
+                        <div class="task-priority normal">Обычно</div>
+                        <div class="task-date">Завтра</div>
+                    </div>
+                    <div class="task-content">
+                        <h3>Подготовить презентацию</h3>
+                        <p>Создать презентацию для клиента по новым возможностям системы</p>
+                        <div class="task-meta">
+                            <span class="category">Маркетинг</span>
+                            <span class="progress">30%</span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="btn-edit"><i class="fas fa-edit"></i></button>
+                        <button class="btn-complete"><i class="fas fa-check"></i></button>
+                    </div>
+                </div>
+                
+                <div class="task-card">
+                    <div class="task-header">
+                        <div class="task-priority low">Низко</div>
+                        <div class="task-date">Через 3 дня</div>
+                    </div>
+                    <div class="task-content">
+                        <h3>Обновить документацию</h3>
+                        <p>Обновить пользовательскую документацию и инструкции</p>
+                        <div class="task-meta">
+                            <span class="category">Документация</span>
+                            <span class="progress">0%</span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="btn-edit"><i class="fas fa-edit"></i></button>
+                        <button class="btn-complete"><i class="fas fa-check"></i></button>
+                    </div>
+                </div>
+                
+                <div class="task-card add-task">
+                    <div class="add-icon">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <h3>Добавить задачу</h3>
+                    <p>Создать новую задачу или проект</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html> 

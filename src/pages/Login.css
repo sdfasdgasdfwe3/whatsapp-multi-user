@@ -1,0 +1,326 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  z-index: 1;
+}
+
+.login-background {
+  display: none;
+}
+
+.login-overlay {
+  display: none;
+}
+
+.login-row {
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  z-index: 2;
+}
+
+.login-card {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px);
+  border: none !important;
+  border-radius: 24px !important;
+  padding: 48px !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.login-title {
+  color: #1a1a1a !important;
+  margin-bottom: 12px !important;
+  font-weight: 700 !important;
+  font-size: 32px !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: normal !important;
+  word-wrap: normal !important;
+  line-height: 1.2 !important;
+  display: block !important;
+  text-align: center !important;
+  width: 100% !important;
+  height: auto !important;
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  direction: ltr !important;
+}
+
+.login-subtitle {
+  display: none;
+}
+
+.login-form {
+  margin-bottom: 32px;
+}
+
+/* Стильные поля ввода */
+.login-input {
+  height: 56px !important;
+  font-size: 16px !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 2px solid rgba(102, 126, 234, 0.2) !important;
+  border-radius: 16px !important;
+  padding: 0 20px !important;
+  transition: all 0.3s ease !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  outline: none !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1) !important;
+}
+
+.login-input:hover {
+  border-color: rgba(102, 126, 234, 0.4) !important;
+  background: rgba(255, 255, 255, 1) !important;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15) !important;
+  transform: translateY(-2px) !important;
+}
+
+.login-input:focus {
+  background: rgba(255, 255, 255, 1) !important;
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 8px 25px rgba(102, 126, 234, 0.15) !important;
+  outline: none !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Переопределяем стили Ant Design */
+.login-input.ant-input {
+  border: 2px solid rgba(102, 126, 234, 0.2) !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1) !important;
+  outline: none !important;
+}
+
+.login-input.ant-input:hover {
+  border-color: rgba(102, 126, 234, 0.4) !important;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15) !important;
+  transform: translateY(-2px) !important;
+}
+
+.login-input.ant-input:focus {
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 8px 25px rgba(102, 126, 234, 0.15) !important;
+  outline: none !important;
+  transform: translateY(-2px) !important;
+}
+
+.login-input.ant-input:focus-within {
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 8px 25px rgba(102, 126, 234, 0.15) !important;
+  outline: none !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Стили для поля пароля */
+.login-input.ant-input-password {
+  border: 2px solid rgba(102, 126, 234, 0.2) !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1) !important;
+  outline: none !important;
+  padding-right: 20px !important;
+}
+
+.login-input.ant-input-password:hover {
+  border-color: rgba(102, 126, 234, 0.4) !important;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15) !important;
+  transform: translateY(-2px) !important;
+}
+
+.login-input.ant-input-password:focus {
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 8px 25px rgba(102, 126, 234, 0.15) !important;
+  outline: none !important;
+  transform: translateY(-2px) !important;
+}
+
+.login-input.ant-input-password:focus-within {
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 8px 25px rgba(102, 126, 234, 0.15) !important;
+  outline: none !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Стили для иконок в полях ввода */
+.input-icon {
+  color: #667eea !important;
+  font-size: 20px !important;
+  margin-right: 16px !important;
+}
+
+/* Стили для иконок пароля */
+.login-input .ant-input-password-icon {
+  color: #667eea !important;
+  font-size: 20px !important;
+}
+
+.login-button {
+  height: 56px !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3) !important;
+  transition: all 0.3s ease !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.login-button:hover::before {
+  left: 100%;
+}
+
+.login-button:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%) !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4) !important;
+}
+
+.login-button:active {
+  background: linear-gradient(135deg, #4f63c7 0%, #5f3780 100%) !important;
+  transform: translateY(-1px) !important;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 32px;
+}
+
+.register-link {
+  color: #667eea !important;
+  font-weight: 600 !important;
+  padding: 0 !important;
+  height: auto !important;
+  font-size: 16px !important;
+  transition: all 0.3s ease !important;
+  text-decoration: none !important;
+}
+
+.register-link:hover {
+  color: #764ba2 !important;
+  text-decoration: none !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Стили для демо-доступа */
+.demo-credentials {
+  text-align: center;
+  margin-top: 24px;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.demo-text {
+  font-size: 14px !important;
+  color: #667eea !important;
+  font-weight: 500 !important;
+}
+
+/* Анимации для элементов формы */
+.login-form .ant-form-item {
+  margin-bottom: 20px !important;
+  animation: fadeInUp 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+.login-form .ant-form-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.login-form .ant-form-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.login-form .ant-form-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 576px) {
+  .login-card {
+    padding: 32px 24px !important;
+    margin: 16px;
+    border-radius: 20px !important;
+  }
+  
+  .login-title {
+    font-size: 28px !important;
+  }
+  
+  .login-input {
+    height: 52px !important;
+    font-size: 16px !important;
+  }
+  
+  .login-button {
+    height: 52px !important;
+    font-size: 16px !important;
+  }
+} 

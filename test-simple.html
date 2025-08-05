@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #25d366;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #128c7e;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Тест API</h1>
+        
+        <div id="status" class="status info">
+            Готов к тестированию
+        </div>
+        
+        <button onclick="testStatus()">📊 Статус</button>
+        <button onclick="testChats()">📋 Чаты</button>
+        <button onclick="testSend()">📤 Отправить</button>
+        <button onclick="testRestart()">🔄 Перезапуск</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function testStatus() {
+            const statusDiv = document.getElementById('status');
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                statusDiv.textContent = 'Проверка статуса...';
+                statusDiv.className = 'status info';
+                
+                const response = await fetch('http://localhost:3001/api/whatsapp/status');
+                const data = await response.json();
+                
+                statusDiv.textContent = 'Статус получен';
+                statusDiv.className = 'status success';
+                
+                resultDiv.innerHTML = `
+                    <h3>Статус WhatsApp:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                
+            } catch (error) {
+                statusDiv.textContent = `Ошибка: ${error.message}`;
+                statusDiv.className = 'status error';
+                resultDiv.innerHTML = `<pre>Ошибка: ${error.message}</pre>`;
+            }
+        }
+        
+        async function testChats() {
+            const statusDiv = document.getElementById('status');
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                statusDiv.textContent = 'Загрузка чатов...';
+                statusDiv.className = 'status info';
+                
+                const response = await fetch('http://localhost:3001/api/whatsapp/chats');
+                const data = await response.json();
+                
+                statusDiv.textContent = 'Чаты загружены';
+                statusDiv.className = 'status success';
+                
+                resultDiv.innerHTML = `
+                    <h3>Список чатов:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                
+            } catch (error) {
+                statusDiv.textContent = `Ошибка: ${error.message}`;
+                statusDiv.className = 'status error';
+                resultDiv.innerHTML = `<pre>Ошибка: ${error.message}</pre>`;
+            }
+        }
+        
+        async function testSend() {
+            const statusDiv = document.getElementById('status');
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                statusDiv.textContent = 'Отправка сообщения...';
+                statusDiv.className = 'status info';
+                
+                const response = await fetch('http://localhost:3001/api/whatsapp/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        number: '79626550251',
+                        message: 'Тестовое сообщение от API'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                statusDiv.textContent = 'Сообщение отправлено';
+                statusDiv.className = 'status success';
+                
+                resultDiv.innerHTML = `
+                    <h3>Результат отправки:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                
+            } catch (error) {
+                statusDiv.textContent = `Ошибка: ${error.message}`;
+                statusDiv.className = 'status error';
+                resultDiv.innerHTML = `<pre>Ошибка: ${error.message}</pre>`;
+            }
+        }
+        
+        async function testRestart() {
+            const statusDiv = document.getElementById('status');
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                statusDiv.textContent = 'Перезапуск...';
+                statusDiv.className = 'status info';
+                
+                const response = await fetch('http://localhost:3001/api/whatsapp/restart', {
+                    method: 'POST'
+                });
+                
+                const data = await response.json();
+                
+                statusDiv.textContent = 'Перезапуск выполнен';
+                statusDiv.className = 'status success';
+                
+                resultDiv.innerHTML = `
+                    <h3>Результат перезапуска:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                
+            } catch (error) {
+                statusDiv.textContent = `Ошибка: ${error.message}`;
+                statusDiv.className = 'status error';
+                resultDiv.innerHTML = `<pre>Ошибка: ${error.message}</pre>`;
+            }
+        }
+        
+        // Автоматически проверяем статус при загрузке
+        window.onload = function() {
+            setTimeout(testStatus, 1000);
+        };
+    </script>
+</body>
+</html> 

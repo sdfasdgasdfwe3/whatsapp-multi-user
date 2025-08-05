@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+    <div class="main-container">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-home"></i>
+                <span>Мой сайт</span>
+            </div>
+            <div class="nav-user">
+                <span id="userName">Пользователь</span>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Выйти
+                </button>
+            </div>
+        </nav>
+        
+        <div class="main-content">
+            <div class="user-info-section">
+                <div class="user-info-card">
+                    <div class="user-info-header">
+                        <div class="user-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="user-details">
+                            <h2 id="userFullName">Администратор</h2>
+                            <p id="userPhone">+7 (999) 123-45-67</p>
+                        </div>
+                    </div>
+                    
+                    <div class="whatsapp-status">
+                        <div class="status-item">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>Статус подключения WhatsApp</span>
+                        </div>
+                        <div class="connection-status" id="whatsappStatus">
+                            <span class="status-disconnected">Не подключен</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Блок для QR-кода и чатов -->
+                <div class="whatsapp-content-card">
+                    <!-- Блок для подключения WhatsApp -->
+                    <div id="whatsapp-connect-inline" class="whatsapp-connect-inline">
+                        <div class="connect-header-inline">
+                            <i class="fab fa-whatsapp"></i>
+                            <h3>Подключите WhatsApp</h3>
+                        </div>
+                        <div class="qr-code-container-inline">
+                            <div class="qr-code-inline" id="qrCodeInline">
+                                <!-- QR-код будет сгенерирован -->
+                            </div>
+                            <p>Отсканируйте QR-код в WhatsApp</p>
+                        </div>
+                        <div class="connect-steps-inline">
+                            <p>1. Откройте WhatsApp на телефоне</p>
+                            <p>2. Перейдите в Настройки → Устройства</p>
+                            <p>3. Нажмите "Подключить устройство"</p>
+                            <p>4. Отсканируйте QR-код</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Блок со списком чатов (скрыт по умолчанию) -->
+                    <div id="chats-list-inline" class="chats-list-inline" style="display: none;">
+                        <div class="chats-header-inline">
+                            <h3><i class="fas fa-comments"></i> Чаты и группы</h3>
+                            <button class="disconnect-btn-inline" onclick="disconnectWhatsApp()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Отключить
+                            </button>
+                        </div>
+                        
+                        <div class="chats-controls-inline">
+                            <div class="search-box-inline">
+                                <input type="text" id="chatSearchInline" placeholder="Поиск чатов..." onkeyup="filterChatsInline()">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="selected-count-inline" id="selectedCountInline">(0 выбрано)</div>
+                        </div>
+                        
+                        <div class="chats-grid-inline" id="chatsGridInline">
+                            <!-- Чаты будут загружены через JavaScript -->
+                        </div>
+                        
+
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sections-grid">
+                <div class="section-card" onclick="window.location.href='products.html'">
+                    <div class="section-icon">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <h3>Продукция</h3>
+                    <p>Управление товарами и каталогом продукции</p>
+                </div>
+                
+                <div class="section-card" onclick="window.location.href='articles.html'">
+                    <div class="section-icon">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <h3>Статьи</h3>
+                    <p>Создание и редактирование статей</p>
+                </div>
+                
+                <div class="section-card" onclick="window.location.href='planning.html'">
+                    <div class="section-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3>Планирование</h3>
+                    <p>Планирование задач и мероприятий</p>
+                </div>
+                
+
+            </div>
+            
+
+        </div>
+    </div>
+    
+    <script src="chats-script.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 

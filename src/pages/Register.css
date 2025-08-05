@@ -1,0 +1,354 @@
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.register-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  z-index: 1;
+}
+
+.register-background {
+  display: none;
+}
+
+.register-overlay {
+  display: none;
+}
+
+.register-row {
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+  z-index: 2;
+}
+
+.register-card {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px);
+  border: none !important;
+  border-radius: 24px !important;
+  padding: 48px !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.register-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #764ba2, #667eea, #764ba2);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.register-title {
+  color: #1a1a1a !important;
+  margin-bottom: 12px !important;
+  font-weight: 700 !important;
+  font-size: 32px !important;
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: normal !important;
+  word-wrap: normal !important;
+  line-height: 1.2 !important;
+  display: block !important;
+  text-align: center !important;
+  width: 100% !important;
+  height: auto !important;
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  direction: ltr !important;
+}
+
+/* Дополнительные переопределения для Ant Design Typography */
+.register-title.ant-typography {
+  white-space: normal !important;
+  word-wrap: normal !important;
+  line-height: 1.2 !important;
+  display: block !important;
+  text-align: center !important;
+  width: 100% !important;
+  height: auto !important;
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  direction: ltr !important;
+}
+
+.register-title.ant-typography h2 {
+  white-space: normal !important;
+  word-wrap: normal !important;
+  line-height: 1.2 !important;
+  display: block !important;
+  text-align: center !important;
+  width: 100% !important;
+  height: auto !important;
+  writing-mode: horizontal-tb !important;
+  text-orientation: mixed !important;
+  direction: ltr !important;
+}
+
+.register-subtitle {
+  font-size: 16px !important;
+  color: #64748b !important;
+  font-weight: 500 !important;
+}
+
+.register-form {
+  margin-bottom: 32px;
+}
+
+/* Стильные поля ввода */
+.register-input {
+  height: 56px !important;
+  font-size: 16px !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 2px solid rgba(118, 75, 162, 0.2) !important;
+  border-radius: 16px !important;
+  padding: 0 20px !important;
+  transition: all 0.3s ease !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  outline: none !important;
+  box-shadow: 0 4px 12px rgba(118, 75, 162, 0.1) !important;
+}
+
+.register-input:hover {
+  border-color: rgba(118, 75, 162, 0.4) !important;
+  background: rgba(255, 255, 255, 1) !important;
+  box-shadow: 0 8px 25px rgba(118, 75, 162, 0.15) !important;
+  transform: translateY(-2px) !important;
+}
+
+.register-input:focus {
+  background: rgba(255, 255, 255, 1) !important;
+  border-color: #764ba2 !important;
+  box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.1), 0 8px 25px rgba(118, 75, 162, 0.15) !important;
+  outline: none !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Переопределяем стили Ant Design */
+.register-input.ant-input {
+  border: 2px solid rgba(118, 75, 162, 0.2) !important;
+  box-shadow: 0 4px 12px rgba(118, 75, 162, 0.1) !important;
+  outline: none !important;
+}
+
+.register-input.ant-input:hover {
+  border-color: rgba(118, 75, 162, 0.4) !important;
+  box-shadow: 0 8px 25px rgba(118, 75, 162, 0.15) !important;
+  transform: translateY(-2px) !important;
+}
+
+.register-input.ant-input:focus {
+  border-color: #764ba2 !important;
+  box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.1), 0 8px 25px rgba(118, 75, 162, 0.15) !important;
+  outline: none !important;
+  transform: translateY(-2px) !important;
+}
+
+.register-input.ant-input:focus-within {
+  border-color: #764ba2 !important;
+  box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.1), 0 8px 25px rgba(118, 75, 162, 0.15) !important;
+  outline: none !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Стили для поля пароля */
+.register-input.ant-input-password {
+  border: 2px solid rgba(118, 75, 162, 0.2) !important;
+  box-shadow: 0 4px 12px rgba(118, 75, 162, 0.1) !important;
+  outline: none !important;
+  padding-right: 20px !important;
+}
+
+.register-input.ant-input-password:hover {
+  border-color: rgba(118, 75, 162, 0.4) !important;
+  box-shadow: 0 8px 25px rgba(118, 75, 162, 0.15) !important;
+  transform: translateY(-2px) !important;
+}
+
+.register-input.ant-input-password:focus {
+  border-color: #764ba2 !important;
+  box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.1), 0 8px 25px rgba(118, 75, 162, 0.15) !important;
+  outline: none !important;
+  transform: translateY(-2px) !important;
+}
+
+.register-input.ant-input-password:focus-within {
+  border-color: #764ba2 !important;
+  box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.1), 0 8px 25px rgba(118, 75, 162, 0.15) !important;
+  outline: none !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Стили для иконок в полях ввода */
+.input-icon {
+  color: #764ba2 !important;
+  font-size: 20px !important;
+  margin-right: 16px !important;
+}
+
+/* Стили для иконок пароля */
+.register-input .ant-input-password-icon {
+  color: #764ba2 !important;
+  font-size: 20px !important;
+}
+
+.register-button {
+  height: 56px !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%) !important;
+  border: none !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 25px rgba(118, 75, 162, 0.3) !important;
+  transition: all 0.3s ease !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.register-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.register-button:hover::before {
+  left: 100%;
+}
+
+.register-button:hover {
+  background: linear-gradient(135deg, #6a4190 0%, #5a6fd8 100%) !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 12px 35px rgba(118, 75, 162, 0.4) !important;
+}
+
+.register-button:active {
+  background: linear-gradient(135deg, #5f3780 0%, #4f63c7 100%) !important;
+  transform: translateY(-1px) !important;
+}
+
+.register-footer {
+  text-align: center;
+  margin-top: 32px;
+}
+
+.login-link {
+  color: #764ba2 !important;
+  font-weight: 600 !important;
+  padding: 0 !important;
+  height: auto !important;
+  font-size: 16px !important;
+  transition: all 0.3s ease !important;
+  text-decoration: none !important;
+}
+
+.login-link:hover {
+  color: #667eea !important;
+  text-decoration: none !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Анимации для элементов формы */
+.register-form .ant-form-item {
+  margin-bottom: 20px !important;
+  animation: fadeInUp 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+.register-form .ant-form-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.register-form .ant-form-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.register-form .ant-form-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.register-form .ant-form-item:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.register-form .ant-form-item:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+.register-form .ant-form-item:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 576px) {
+  .register-card {
+    padding: 32px 24px !important;
+    margin: 16px;
+    border-radius: 20px !important;
+  }
+  
+  .register-title {
+    font-size: 28px !important;
+  }
+  
+  .register-subtitle {
+    font-size: 14px !important;
+  }
+  
+  .register-input {
+    height: 52px !important;
+    font-size: 16px !important;
+  }
+  
+  .register-button {
+    height: 52px !important;
+    font-size: 16px !important;
+  }
+} 

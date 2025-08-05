@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статьи</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="main-container">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-newspaper"></i>
+                <span>Статьи</span>
+                </div>
+            <div class="nav-user">
+                    <a href="home.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        Главная
+                    </a>
+                <span id="userName">Пользователь</span>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Выйти
+                    </button>
+                </div>
+        </nav>
+        
+        <div class="main-content">
+            <div class="page-header">
+                <h1><i class="fas fa-newspaper"></i> Каталог статей</h1>
+                <p>Создание и управление статьями</p>
+            </div>
+            
+            <!-- Кнопка добавления статьи для всех пользователей -->
+            <div class="admin-controls">
+                <button class="add-product-btn" onclick="showAddArticleModal()">
+                    <i class="fas fa-plus"></i>
+                    Добавить статью
+                </button>
+            </div>
+            
+            <div class="articles-grid">
+                <div class="article-card">
+                    <div class="article-image">
+                        <img src="https://via.placeholder.com/200x200/667eea/ffffff?text=Технологии" alt="Современные технологии веб-разработки">
+                    </div>
+                    <div class="article-info">
+                        <h3>Современные технологии веб-разработки</h3>
+                        <p class="article-excerpt">Обзор последних тенденций в области веб-разработки и новых технологий...</p>
+                    </div>
+                    <div class="article-actions" id="articleActions" style="display: none;">
+                        <button class="btn-edit" onclick="editArticle(1)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-delete" onclick="deleteArticle(1)"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="whatsapp-share">
+                        <button class="btn-whatsapp" onclick="shareToWhatsApp('Современные технологии веб-разработки', '05.08.2025', 'Обзор последних тенденций в области веб-разработки и новых технологий...')">
+                            <i class="fab fa-whatsapp"></i>
+                            Отправить в WhatsApp
+                        </button>
+                </div>
+            </div>
+
+                <div class="article-card">
+                    <div class="article-image">
+                        <img src="https://via.placeholder.com/200x200/764ba2/ffffff?text=Аналитика" alt="Анализ рынка IT в 2025 году">
+                    </div>
+                    <div class="article-info">
+                        <h3>Анализ рынка IT в 2025 году</h3>
+                        <p class="article-excerpt">Подробный анализ текущего состояния IT-рынка и прогнозы на будущее...</p>
+                    </div>
+                    <div class="article-actions" id="articleActions" style="display: none;">
+                        <button class="btn-edit" onclick="editArticle(2)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-delete" onclick="deleteArticle(2)"><i class="fas fa-trash"></i></button>
+                        </div>
+                    <div class="whatsapp-share">
+                        <button class="btn-whatsapp" onclick="shareToWhatsApp('Анализ рынка IT в 2025 году', '04.08.2025', 'Подробный анализ текущего состояния IT-рынка и прогнозы на будущее...')">
+                            <i class="fab fa-whatsapp"></i>
+                            Отправить в WhatsApp
+                        </button>
+                    </div>
+                </div>
+
+                <div class="article-card">
+                    <div class="article-image">
+                        <img src="https://via.placeholder.com/200x200/4CAF50/ffffff?text=Менеджмент" alt="Эффективное управление командой разработки">
+                    </div>
+                    <div class="article-info">
+                        <h3>Эффективное управление командой разработки</h3>
+                        <p class="article-excerpt">Практические советы по организации работы команды разработчиков...</p>
+                    </div>
+                    <div class="article-actions" id="articleActions" style="display: none;">
+                        <button class="btn-edit" onclick="editArticle(3)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-delete" onclick="deleteArticle(3)"><i class="fas fa-trash"></i></button>
+                        </div>
+                    <div class="whatsapp-share">
+                        <button class="btn-whatsapp" onclick="shareToWhatsApp('Эффективное управление командой разработки', '03.08.2025', 'Практические советы по организации работы команды разработчиков...')">
+                            <i class="fab fa-whatsapp"></i>
+                            Отправить в WhatsApp
+                        </button>
+                    </div>
+                </div>
+
+                <div class="article-card">
+                    <div class="article-image">
+                        <img src="https://via.placeholder.com/200x200/FF6B6B/ffffff?text=Дизайн" alt="Тренды в веб-дизайне 2025">
+                    </div>
+                    <div class="article-info">
+                        <h3>Тренды в веб-дизайне 2025</h3>
+                        <p class="article-excerpt">Новые направления в дизайне интерфейсов и пользовательского опыта...</p>
+                    </div>
+                    <div class="article-actions" id="articleActions" style="display: none;">
+                        <button class="btn-edit" onclick="editArticle(4)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-delete" onclick="deleteArticle(4)"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="whatsapp-share">
+                        <button class="btn-whatsapp" onclick="shareToWhatsApp('Тренды в веб-дизайне 2025', '02.08.2025', 'Новые направления в дизайне интерфейсов и пользовательского опыта...')">
+                            <i class="fab fa-whatsapp"></i>
+                            Отправить в WhatsApp
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="article-card">
+                    <div class="article-image">
+                        <img src="https://via.placeholder.com/200x200/FFC107/ffffff?text=Безопасность" alt="Кибербезопасность в современном мире">
+                    </div>
+                    <div class="article-info">
+                        <h3>Кибербезопасность в современном мире</h3>
+                        <p class="article-excerpt">Важные аспекты защиты данных и информационной безопасности...</p>
+                    </div>
+                    <div class="article-actions" id="articleActions" style="display: none;">
+                        <button class="btn-edit" onclick="editArticle(5)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-delete" onclick="deleteArticle(5)"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="whatsapp-share">
+                        <button class="btn-whatsapp" onclick="shareToWhatsApp('Кибербезопасность в современном мире', '01.08.2025', 'Важные аспекты защиты данных и информационной безопасности...')">
+                            <i class="fab fa-whatsapp"></i>
+                            Отправить в WhatsApp
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="article-card">
+                    <div class="article-image">
+                        <img src="https://via.placeholder.com/200x200/9C27B0/ffffff?text=ИИ" alt="Искусственный интеллект в бизнесе">
+                    </div>
+                    <div class="article-info">
+                        <h3>Искусственный интеллект в бизнесе</h3>
+                        <p class="article-excerpt">Практическое применение ИИ для оптимизации бизнес-процессов...</p>
+                    </div>
+                    <div class="article-actions" id="articleActions" style="display: none;">
+                        <button class="btn-edit" onclick="editArticle(6)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-delete" onclick="deleteArticle(6)"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="whatsapp-share">
+                        <button class="btn-whatsapp" onclick="shareToWhatsApp('Искусственный интеллект в бизнесе', '31.07.2025', 'Практическое применение ИИ для оптимизации бизнес-процессов...')">
+                            <i class="fab fa-whatsapp"></i>
+                            Отправить в WhatsApp
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="article-card">
+                    <div class="article-image">
+                        <img src="https://via.placeholder.com/200x200/607D8B/ffffff?text=Облако" alt="Облачные технологии и их преимущества">
+                    </div>
+                    <div class="article-info">
+                        <h3>Облачные технологии и их преимущества</h3>
+                        <p class="article-excerpt">Обзор современных облачных решений и их применения...</p>
+                    </div>
+                    <div class="article-actions" id="articleActions" style="display: none;">
+                        <button class="btn-edit" onclick="editArticle(7)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-delete" onclick="deleteArticle(7)"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="whatsapp-share">
+                        <button class="btn-whatsapp" onclick="shareToWhatsApp('Облачные технологии и их преимущества', '30.07.2025', 'Обзор современных облачных решений и их применения...')">
+                            <i class="fab fa-whatsapp"></i>
+                            Отправить в WhatsApp
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="article-card">
+                    <div class="article-image">
+                        <img src="https://via.placeholder.com/200x200/795548/ffffff?text=Мобильные" alt="Разработка мобильных приложений">
+                    </div>
+                    <div class="article-info">
+                        <h3>Разработка мобильных приложений</h3>
+                        <p class="article-excerpt">Современные подходы к созданию мобильных приложений...</p>
+                    </div>
+                    <div class="article-actions" id="articleActions" style="display: none;">
+                        <button class="btn-edit" onclick="editArticle(8)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-delete" onclick="deleteArticle(8)"><i class="fas fa-trash"></i></button>
+                        </div>
+                    <div class="whatsapp-share">
+                        <button class="btn-whatsapp" onclick="shareToWhatsApp('Разработка мобильных приложений', '29.07.2025', 'Современные подходы к созданию мобильных приложений...')">
+                            <i class="fab fa-whatsapp"></i>
+                            Отправить в WhatsApp
+                        </button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+    <!-- Модальное окно для добавления статьи -->
+    <div id="addArticleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-plus"></i> Добавить статью</h2>
+                <button class="close-btn" onclick="closeAddArticleModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addArticleForm" class="modal-form">
+                <div class="form-group">
+                    <label for="articleTitle">Название статьи *</label>
+                    <input type="text" id="articleTitle" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="articleDescription">Описание *</label>
+                    <textarea id="articleDescription" rows="4" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="articleImage">Фото статьи</label>
+                    <input type="file" id="articleImage" accept="image/*">
+                    <div class="file-upload-info">
+                        <i class="fas fa-upload"></i>
+                        <span>Выберите изображение или перетащите файл</span>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeAddArticleModal()">Отмена</button>
+                    <button type="submit" class="btn-save">Сохранить статью</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="chats-script.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 

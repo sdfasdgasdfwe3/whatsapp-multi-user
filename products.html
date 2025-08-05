@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Продукция</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="main-container">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-box"></i>
+                <span>Продукция</span>
+            </div>
+            <div class="nav-user">
+                <a href="home.html" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    Главная
+                </a>
+                <span id="userName">Пользователь</span>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Выйти
+                </button>
+            </div>
+        </nav>
+        
+        <div class="main-content">
+            <div class="page-header">
+                <h1><i class="fas fa-box"></i> Каталог продукции</h1>
+                <p>Управление товарами и каталогом продукции</p>
+            </div>
+            
+            <!-- Кнопка добавления товара только для администраторов -->
+            <div class="admin-controls" id="adminControls" style="display: none;">
+                <button class="add-product-btn" onclick="showAddProductModal()">
+                    <i class="fas fa-plus"></i>
+                    Добавить товар
+                </button>
+            </div>
+            
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://via.placeholder.com/200x200/667eea/ffffff?text=Ноутбук" alt="Ноутбук Dell XPS 13">
+                    </div>
+                    <div class="product-info">
+                        <h3>Ноутбук Dell XPS 13</h3>
+                        <p class="product-description">Мощный ноутбук для работы и творчества с процессором Intel i7</p>
+                        <div class="product-meta">
+                            <span class="price">₽89,999</span>
+                            <span class="points">150 баллов</span>
+                        </div>
+                    </div>
+                    <div class="product-actions" id="productActions" style="display: none;">
+                        <button class="btn-edit" onclick="editProduct(1)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-delete" onclick="deleteProduct(1)"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="whatsapp-share">
+                        <button class="btn-whatsapp" onclick="shareToWhatsApp('Ноутбук Dell XPS 13', '₽89,999', 'Мощный ноутбук для работы и творчества с процессором Intel i7')">
+                            <i class="fab fa-whatsapp"></i>
+                            Отправить в WhatsApp
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://via.placeholder.com/200x200/764ba2/ffffff?text=iPhone" alt="iPhone 15 Pro">
+                    </div>
+                    <div class="product-info">
+                        <h3>iPhone 15 Pro</h3>
+                        <p class="product-description">Смартфон премиум класса с камерой 48 МП</p>
+                        <div class="product-meta">
+                            <span class="price">₽129,999</span>
+                            <span class="points">200 баллов</span>
+                        </div>
+                    </div>
+                    <div class="product-actions" id="productActions" style="display: none;">
+                        <button class="btn-edit" onclick="editProduct(2)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-delete" onclick="deleteProduct(2)"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="whatsapp-share">
+                        <button class="btn-whatsapp" onclick="shareToWhatsApp('iPhone 15 Pro', '₽129,999', 'Смартфон премиум класса с камерой 48 МП')">
+                            <i class="fab fa-whatsapp"></i>
+                            Отправить в WhatsApp
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://via.placeholder.com/200x200/4CAF50/ffffff?text=Наушники" alt="AirPods Pro">
+                    </div>
+                    <div class="product-info">
+                        <h3>AirPods Pro</h3>
+                        <p class="product-description">Беспроводные наушники с активным шумоподавлением</p>
+                        <div class="product-meta">
+                            <span class="price">₽24,999</span>
+                            <span class="points">50 баллов</span>
+                        </div>
+                    </div>
+                    <div class="product-actions" id="productActions" style="display: none;">
+                        <button class="btn-edit" onclick="editProduct(3)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-delete" onclick="deleteProduct(3)"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="whatsapp-share">
+                        <button class="btn-whatsapp" onclick="shareToWhatsApp('AirPods Pro', '₽24,999', 'Беспроводные наушники с активным шумоподавлением')">
+                            <i class="fab fa-whatsapp"></i>
+                            Отправить в WhatsApp
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://via.placeholder.com/200x200/FF6B6B/ffffff?text=Планшет" alt="iPad Pro">
+                    </div>
+                    <div class="product-info">
+                        <h3>iPad Pro 12.9"</h3>
+                        <p class="product-description">Мощный планшет для профессионалов с дисплеем Liquid Retina XDR</p>
+                        <div class="product-meta">
+                            <span class="price">₽149,999</span>
+                            <span class="points">250 баллов</span>
+                        </div>
+                    </div>
+                    <div class="product-actions" id="productActions" style="display: none;">
+                        <button class="btn-edit" onclick="editProduct(4)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-delete" onclick="deleteProduct(4)"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="whatsapp-share">
+                        <button class="btn-whatsapp" onclick="shareToWhatsApp('iPad Pro 12.9&quot;', '₽149,999', 'Мощный планшет для профессионалов с дисплеем Liquid Retina XDR')">
+                            <i class="fab fa-whatsapp"></i>
+                            Отправить в WhatsApp
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://via.placeholder.com/200x200/FFC107/ffffff?text=Часы" alt="Apple Watch">
+                    </div>
+                    <div class="product-info">
+                        <h3>Apple Watch Series 9</h3>
+                        <p class="product-description">Умные часы с мониторингом здоровья и фитнес-функциями</p>
+                        <div class="product-meta">
+                            <span class="price">₽39,999</span>
+                            <span class="points">80 баллов</span>
+                        </div>
+                    </div>
+                    <div class="product-actions" id="productActions" style="display: none;">
+                        <button class="btn-edit" onclick="editProduct(5)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-delete" onclick="deleteProduct(5)"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="whatsapp-share">
+                        <button class="btn-whatsapp" onclick="shareToWhatsApp('Apple Watch Series 9', '₽39,999', 'Умные часы с мониторингом здоровья и фитнес-функциями')">
+                            <i class="fab fa-whatsapp"></i>
+                            Отправить в WhatsApp
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://via.placeholder.com/200x200/9C27B0/ffffff?text=Камера" alt="Sony A7">
+                    </div>
+                    <div class="product-info">
+                        <h3>Sony A7 IV</h3>
+                        <p class="product-description">Зеркальная камера с полнокадровым сенсором 33 МП</p>
+                        <div class="product-meta">
+                            <span class="price">₽199,999</span>
+                            <span class="points">300 баллов</span>
+                        </div>
+                    </div>
+                    <div class="product-actions" id="productActions" style="display: none;">
+                        <button class="btn-edit" onclick="editProduct(6)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-delete" onclick="deleteProduct(6)"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="whatsapp-share">
+                        <button class="btn-whatsapp" onclick="shareToWhatsApp('Sony A7 IV', '₽199,999', 'Зеркальная камера с полнокадровым сенсором 33 МП')">
+                            <i class="fab fa-whatsapp"></i>
+                            Отправить в WhatsApp
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://via.placeholder.com/200x200/607D8B/ffffff?text=Клавиатура" alt="Mechanical Keyboard">
+                    </div>
+                    <div class="product-info">
+                        <h3>Logitech G Pro X</h3>
+                        <p class="product-description">Механическая клавиатура для геймеров с RGB подсветкой</p>
+                        <div class="product-meta">
+                            <span class="price">₽12,999</span>
+                            <span class="points">25 баллов</span>
+                        </div>
+                    </div>
+                    <div class="product-actions" id="productActions" style="display: none;">
+                        <button class="btn-edit" onclick="editProduct(7)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-delete" onclick="deleteProduct(7)"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="whatsapp-share">
+                        <button class="btn-whatsapp" onclick="shareToWhatsApp('Logitech G Pro X', '₽12,999', 'Механическая клавиатура для геймеров с RGB подсветкой')">
+                            <i class="fab fa-whatsapp"></i>
+                            Отправить в WhatsApp
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://via.placeholder.com/200x200/795548/ffffff?text=Монитор" alt="4K Monitor">
+                    </div>
+                    <div class="product-info">
+                        <h3>LG 27" 4K Monitor</h3>
+                        <p class="product-description">Монитор 4K с точной цветопередачей для профессионалов</p>
+                        <div class="product-meta">
+                            <span class="price">₽45,999</span>
+                            <span class="points">90 баллов</span>
+                        </div>
+                    </div>
+                    <div class="product-actions" id="productActions" style="display: none;">
+                        <button class="btn-edit" onclick="editProduct(8)"><i class="fas fa-edit"></i></button>
+                        <button class="btn-delete" onclick="deleteProduct(8)"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="whatsapp-share">
+                        <button class="btn-whatsapp" onclick="shareToWhatsApp('LG 27&quot; 4K Monitor', '₽45,999', 'Монитор 4K с точной цветопередачей для профессионалов')">
+                            <i class="fab fa-whatsapp"></i>
+                            Отправить в WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно для добавления товара -->
+    <div id="addProductModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-plus"></i> Добавить товар</h2>
+                <button class="close-btn" onclick="closeAddProductModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addProductForm" class="modal-form">
+                <div class="form-group">
+                    <label for="productName">Название товара *</label>
+                    <input type="text" id="productName" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productPrice">Цена (₽) *</label>
+                        <input type="number" id="productPrice" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPoints">Баллы *</label>
+                        <input type="number" id="productPoints" min="0" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productDescription">Описание *</label>
+                    <textarea id="productDescription" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productImage">Фото товара</label>
+                    <input type="file" id="productImage" accept="image/*">
+                    <div class="file-upload-info">
+                        <i class="fas fa-upload"></i>
+                        <span>Выберите изображение или перетащите файл</span>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeAddProductModal()">Отмена</button>
+                    <button type="submit" class="btn-save">Сохранить товар</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="chats-script.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 

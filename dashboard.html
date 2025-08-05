@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель управления</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="main-container">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Панель управления</span>
+            </div>
+            <div class="nav-user">
+                <span id="userName">Администратор</span>
+                <button class="logout-btn" onclick="window.location.href='home.html'">
+                    <i class="fas fa-home"></i>
+                    На главную
+                </button>
+            </div>
+        </nav>
+        
+        <div class="main-content">
+            
+            <div class="dashboard-tabs">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="showTab('chats')">
+                        <i class="fas fa-comments"></i>
+                        Чаты и группы
+                    </button>
+                    <button class="tab-btn" onclick="showTab('sessions')">
+                        <i class="fas fa-clock"></i>
+                        Сессии пользователей
+                    </button>
+                </div>
+                
+                <div class="tab-content">
+                    <!-- Вкладка чатов -->
+                    <div id="chats-tab" class="tab-pane active">
+                        <div class="chats-section">
+                            <div class="section-header">
+                                <h2><i class="fas fa-comments"></i> Чаты пользователей <span id="selectedCount" class="selected-count">(0 выбрано)</span></h2>
+                                <div class="search-box">
+                                    <input type="text" id="chatSearch" placeholder="Поиск чатов..." onkeyup="filterChats()">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="chats-grid" id="chatsGrid">
+                                <!-- Чаты будут загружены через JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Вкладка сессий -->
+                    <div id="sessions-tab" class="tab-pane">
+                        <div class="sessions-section">
+                            <div class="section-header">
+                                <h2><i class="fas fa-clock"></i> Сессии пользователей</h2>
+                                <div class="session-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-number">156</span>
+                                        <span class="stat-label">Активных пользователей</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">42</span>
+                                        <span class="stat-label">Активных чатов</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number">8</span>
+                                        <span class="stat-label">Групп</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="sessions-grid" id="sessionsGrid">
+                                <!-- Сессии будут загружены через JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="dashboard-script.js"></script>
+</body>
+</html> 
