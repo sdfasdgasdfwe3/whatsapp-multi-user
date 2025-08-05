@@ -109,14 +109,21 @@ function createWhatsAppClient(userId) {
     client.on('qr', async (qr) => {
         console.log(`QR Code received for user ${userId}:`, qr);
         isInitializing = false;
-        qrCodeData = qr;
         
         try {
-            const qrImage = await qrcode.toDataURL(qr);
+            // Генерируем QR-код как Data URL
+            const qrImage = await qrcode.toDataURL(qr, {
+                errorCorrectionLevel: 'M',
+                type: 'image/png',
+                quality: 0.92,
+                margin: 1
+            });
             qrCodeData = qrImage;
             console.log(`QR code image generated successfully for user ${userId}`);
         } catch (err) {
             console.error(`Error generating QR code for user ${userId}:`, err);
+            // Если не удалось сгенерировать изображение, сохраняем текстовый QR-код
+            qrCodeData = qr;
         }
     });
 
@@ -300,7 +307,10 @@ app.get('/api/whatsapp/status/:userId', (req, res) => {
 app.get('/api/whatsapp/qr/:userId', (req, res) => {
     const userId = req.params.userId;
     
+    console.log(`QR request for user ${userId}`);
+    
     if (!activeClients.has(userId)) {
+        console.log(`Creating new WhatsApp client for user ${userId}`);
         // Создаем клиент для пользователя
         const clientWrapper = createWhatsAppClient(userId);
         activeClients.set(userId, clientWrapper);
