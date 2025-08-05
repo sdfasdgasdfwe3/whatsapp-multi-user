@@ -479,6 +479,64 @@ app.get('/api/messages/stats/:userId', (req, res) => {
     });
 });
 
+// Получить всех пользователей (только для администраторов)
+app.get('/api/admin/users', (req, res) => {
+    const db = loadDatabase();
+    
+    // Убираем пароли из ответа
+    const usersWithoutPasswords = db.users.map(user => {
+        const { password, ...userWithoutPassword } = user;
+        return userWithoutPassword;
+    });
+    
+    res.json({ users: usersWithoutPasswords });
+});
+
+// Изменить роль пользователя (только для администраторов)
+app.post('/api/admin/users/:userId/role', (req, res) => {
+    const userId = parseInt(req.params.userId);
+    const { role } = req.body;
+    
+    if (!['admin', 'user'].includes(role)) {
+        return res.status(400).json({ success: false, error: 'Invalid role' });
+    }
+    
+    const db = loadDatabase();
+    const user = db.users.find(u => u.id === userId);
+    
+    if (!user) {
+        return res.status(404).json({ success: false, error: 'User not found' });
+    }
+    
+    user.role = role;
+    saveDatabase(db);
+    
+    const { password, ...userWithoutPassword } = user;
+    res.json({ success: true, user: userWithoutPassword });
+});
+
+// Удалить пользователя (только для администраторов)
+app.delete('/api/admin/users/:userId', (req, res) => {
+    const userId = parseInt(req.params.userId);
+    const db = loadDatabase();
+    
+    const userIndex = db.users.findIndex(u => u.id === userId);
+    
+    if (userIndex === -1) {
+        return res.status(404).json({ success: false, error: 'User not found' });
+    }
+    
+    // Нельзя удалить главного администратора
+    if (db.users[userIndex].username === 'admin') {
+        return res.status(400).json({ success: false, error: 'Cannot delete main administrator' });
+    }
+    
+    db.users.splice(userIndex, 1);
+    saveDatabase(db);
+    
+    res.json({ success: true, message: 'User deleted successfully' });
+});
+
 app.listen(port, () => {
     console.log(`Multi-user WhatsApp server running on port ${port}`);
 }); 

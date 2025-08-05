@@ -191,6 +191,12 @@ function loadUserData() {
     
     // Проверяем статус WhatsApp
     checkWhatsAppStatus();
+    
+    // Проверяем права администратора
+    if (currentUser.role === 'admin') {
+        showAdminControls();
+        showAdminSections();
+    }
 }
 
 // Обновление имени пользователя в навигации на всех страницах
@@ -348,6 +354,14 @@ function showAdminControls() {
             });
         }
     }
+}
+
+// Показать секции для администраторов
+function showAdminSections() {
+    const adminSections = document.querySelectorAll('.admin-only');
+    adminSections.forEach(section => {
+        section.style.display = 'block';
+    });
 }
 
 function showAddProductModal() {
