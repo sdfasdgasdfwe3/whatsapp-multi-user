@@ -3,6 +3,11 @@ const cors = require('cors');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode');
 const https = require('https');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+// Импортируем модуль для работы с базой данных
+const db = require('./database');
 
 const app = express();
 const port = 3001;
@@ -63,6 +68,26 @@ const client = new Client({
 let qrCodeData = null;
 let isConnected = false;
 let isInitializing = true;
+
+// Инициализация базы данных
+async function initializeServer() {
+    console.log('🚀 Инициализация сервера...');
+    
+    // Инициализируем подключение к MySQL
+    const dbInitialized = await db.initializeDatabase();
+    if (!dbInitialized) {
+        console.error('❌ Не удалось подключиться к базе данных. Сервер будет работать с ограниченной функциональностью.');
+    }
+    
+    // Запускаем сервер
+    app.listen(port, () => {
+        console.log(`✅ Сервер запущен на порту ${port}`);
+        console.log(`🌐 Сайт доступен по адресу: http://localhost:${port}`);
+    });
+}
+
+// Запускаем инициализацию
+initializeServer();
 
 // Генерируем QR-код для подключения
 client.on('qr', async (qr) => {
@@ -358,6 +383,309 @@ app.post('/api/whatsapp/clear-session', async (req, res) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`WhatsApp server running on port ${port}`);
+// ===== API ЭНДПОИНТЫ ДЛЯ РАБОТЫ С БАЗОЙ ДАННЫХ =====
+
+// Аутентификация пользователей
+app.post('/api/auth/register', async (req, res) => {
+    try {
+        const { username, password, fullName, email } = req.body;
+        
+        // Проверяем, существует ли пользователь
+        const existingUser = await db.findUserByUsername(username);
+        if (existingUser) {
+            return res.status(400).json({ success: false, error: 'Пользователь с таким именем уже существует' });
+        }
+        
+        // Хешируем пароль
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        // Создаем пользователя
+        const result = await db.createUser({
+            username,
+            password: hashedPassword,
+            fullName,
+            email,
+            role: 'user'
+        });
+        
+        if (result.success) {
+            res.json({ success: true, message: 'Пользователь успешно зарегистрирован' });
+        } else {
+            res.status(500).json({ success: false, error: result.error });
+        }
+    } catch (error) {
+        console.error('Ошибка регистрации:', error);
+        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+    }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        
+        // Ищем пользователя
+        const user = await db.findUserByUsername(username);
+        if (!user) {
+            return res.status(401).json({ success: false, error: 'Неверное имя пользователя или пароль' });
+        }
+        
+        // Проверяем пароль
+        const isValidPassword = await bcrypt.compare(password, user.password);
+        if (!isValidPassword) {
+            return res.status(401).json({ success: false, error: 'Неверное имя пользователя или пароль' });
+        }
+        
+        // Создаем JWT токен
+        const token = jwt.sign(
+            { userId: user.id, username: user.username, role: user.role },
+            'your-secret-key', // В продакшене используйте переменную окружения
+            { expiresIn: '24h' }
+        );
+        
+        // Убираем пароль из ответа
+        const { password: _, ...userWithoutPassword } = user;
+        
+        res.json({
+            success: true,
+            user: userWithoutPassword,
+            token
+        });
+    } catch (error) {
+        console.error('Ошибка входа:', error);
+        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+    }
+});
+
+// API для продуктов
+app.get('/api/products', async (req, res) => {
+    try {
+        const result = await db.getAllProducts();
+        if (result.success) {
+            res.json(result);
+        } else {
+            res.status(500).json(result);
+        }
+    } catch (error) {
+        console.error('Ошибка получения продуктов:', error);
+        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+    }
+});
+
+app.post('/api/products', async (req, res) => {
+    try {
+        const { name, description, price, points, image } = req.body;
+        
+        const result = await db.createProduct({
+            name,
+            description,
+            price: parseFloat(price),
+            points: parseInt(points) || 0,
+            image: image || null
+        });
+        
+        if (result.success) {
+            res.json({ success: true, productId: result.productId });
+        } else {
+            res.status(500).json(result);
+        }
+    } catch (error) {
+        console.error('Ошибка создания продукта:', error);
+        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+    }
+});
+
+app.put('/api/products/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, description, price, points, image } = req.body;
+        
+        const result = await db.updateProduct(parseInt(id), {
+            name,
+            description,
+            price: parseFloat(price),
+            points: parseInt(points) || 0,
+            image: image || null
+        });
+        
+        if (result.success) {
+            res.json({ success: true });
+        } else {
+            res.status(500).json(result);
+        }
+    } catch (error) {
+        console.error('Ошибка обновления продукта:', error);
+        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+    }
+});
+
+app.delete('/api/products/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await db.deleteProduct(parseInt(id));
+        
+        if (result.success) {
+            res.json({ success: true });
+        } else {
+            res.status(500).json(result);
+        }
+    } catch (error) {
+        console.error('Ошибка удаления продукта:', error);
+        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+    }
+});
+
+// API для статей
+app.get('/api/articles', async (req, res) => {
+    try {
+        const result = await db.getAllArticles();
+        if (result.success) {
+            res.json(result);
+        } else {
+            res.status(500).json(result);
+        }
+    } catch (error) {
+        console.error('Ошибка получения статей:', error);
+        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+    }
+});
+
+app.post('/api/articles', async (req, res) => {
+    try {
+        const { title, content, author, image } = req.body;
+        
+        const result = await db.createArticle({
+            title,
+            content,
+            author,
+            image: image || null
+        });
+        
+        if (result.success) {
+            res.json({ success: true, articleId: result.articleId });
+        } else {
+            res.status(500).json(result);
+        }
+    } catch (error) {
+        console.error('Ошибка создания статьи:', error);
+        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+    }
+});
+
+app.put('/api/articles/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, content, author, image } = req.body;
+        
+        const result = await db.updateArticle(parseInt(id), {
+            title,
+            content,
+            author,
+            image: image || null
+        });
+        
+        if (result.success) {
+            res.json({ success: true });
+        } else {
+            res.status(500).json(result);
+        }
+    } catch (error) {
+        console.error('Ошибка обновления статьи:', error);
+        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+    }
+});
+
+app.delete('/api/articles/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await db.deleteArticle(parseInt(id));
+        
+        if (result.success) {
+            res.json({ success: true });
+        } else {
+            res.status(500).json(result);
+        }
+    } catch (error) {
+        console.error('Ошибка удаления статьи:', error);
+        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+    }
+});
+
+// API для чатов
+app.get('/api/chats/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const result = await db.getUserChats(parseInt(userId));
+        
+        if (result.success) {
+            res.json(result);
+        } else {
+            res.status(500).json(result);
+        }
+    } catch (error) {
+        console.error('Ошибка получения чатов:', error);
+        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+    }
+});
+
+app.post('/api/chats', async (req, res) => {
+    try {
+        const { userId, contactName, contactNumber, lastMessage } = req.body;
+        
+        const result = await db.createChat({
+            userId: parseInt(userId),
+            contactName,
+            contactNumber,
+            lastMessage
+        });
+        
+        if (result.success) {
+            res.json({ success: true, chatId: result.chatId });
+        } else {
+            res.status(500).json(result);
+        }
+    } catch (error) {
+        console.error('Ошибка создания чата:', error);
+        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+    }
+});
+
+// API для сообщений
+app.get('/api/messages/:chatId', async (req, res) => {
+    try {
+        const { chatId } = req.params;
+        const result = await db.getChatMessages(parseInt(chatId));
+        
+        if (result.success) {
+            res.json(result);
+        } else {
+            res.status(500).json(result);
+        }
+    } catch (error) {
+        console.error('Ошибка получения сообщений:', error);
+        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+    }
+});
+
+app.post('/api/messages', async (req, res) => {
+    try {
+        const { chatId, messageText, isFromMe } = req.body;
+        
+        const result = await db.createMessage({
+            chatId: parseInt(chatId),
+            messageText,
+            isFromMe: Boolean(isFromMe)
+        });
+        
+        if (result.success) {
+            // Обновляем последнее сообщение в чате
+            await db.updateChatLastMessage(parseInt(chatId), messageText);
+            
+            res.json({ success: true, messageId: result.messageId });
+        } else {
+            res.status(500).json(result);
+        }
+    } catch (error) {
+        console.error('Ошибка создания сообщения:', error);
+        res.status(500).json({ success: false, error: 'Ошибка сервера' });
+    }
 }); 
