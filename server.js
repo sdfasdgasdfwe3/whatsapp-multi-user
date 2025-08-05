@@ -12,9 +12,18 @@ const db = require('./database');
 const app = express();
 const port = 3001;
 
-app.use(cors());
+// Настройка CORS для разрешения запросов с любого домена
+app.use(cors({
+    origin: ['http://89.104.66.62', 'http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000', 'http://127.0.0.1:3001'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
 app.use(express.json());
 app.use(express.static('.'));
+
+// Обработчик для preflight запросов
+app.options('*', cors());
 
 // Создаем клиент WhatsApp
 const client = new Client({
@@ -384,6 +393,33 @@ app.post('/api/whatsapp/clear-session', async (req, res) => {
 });
 
 // ===== API ЭНДПОИНТЫ ДЛЯ РАБОТЫ С БАЗОЙ ДАННЫХ =====
+
+// Тестовый эндпоинт для проверки работы сервера
+app.get('/api/test', (req, res) => {
+    res.json({ 
+        success: true, 
+        message: 'Сервер работает!',
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Эндпоинт для проверки статуса базы данных
+app.get('/api/db-status', async (req, res) => {
+    try {
+        const result = await db.getAllProducts();
+        res.json({ 
+            success: true, 
+            dbConnected: result.success,
+            productsCount: result.success ? result.products.length : 0
+        });
+    } catch (error) {
+        res.json({ 
+            success: false, 
+            dbConnected: false,
+            error: error.message 
+        });
+    }
+});
 
 // Аутентификация пользователей
 app.post('/api/auth/register', async (req, res) => {
