@@ -30,8 +30,7 @@
     "server-multi": "node server-multi.js",
     "api-server": "node start-server.js",
     "production": "node start-production.js",
-    "check-server": "node check-server.js",
-    "test-server": "node test-server.js"
+    "check-server": "node check-server.js"
   },
   "eslintConfig": {
     "extends": [

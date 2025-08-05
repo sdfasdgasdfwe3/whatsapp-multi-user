@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 const express = require('express');
-const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('./database');
@@ -10,18 +9,23 @@ const app = express();
 const port = 3001;
 
 // Настройка CORS для продакшена
-app.use(cors({
-    origin: ['http://89.104.66.62', 'http://localhost:3000', 'http://localhost:3001'],
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    next();
+});
 
 app.use(express.json());
 app.use(express.static('.'));
 
 // Обработчик для preflight запросов
-app.options('*', cors());
+app.options('*', (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    res.sendStatus(200);
+});
 
 // Логирование запросов
 app.use((req, res, next) => {
