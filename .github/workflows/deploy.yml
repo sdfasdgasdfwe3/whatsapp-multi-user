@@ -35,7 +35,8 @@ jobs:
         password: ${{ secrets.HOSTING_PASSWORD }}
         port: 22
         source: "deploy.zip"
-        target: "/home/u3217624/domains/znam.fun/public_html/"
+        target: "/home/u3217624/domains/znam.fun/public_html"
+        strip_components: 0
         
     - name: Execute deployment commands
       uses: appleboy/ssh-action@v1.0.3
@@ -45,11 +46,14 @@ jobs:
         password: ${{ secrets.HOSTING_PASSWORD }}
         port: 22
         script: |
-          cd /home/u3217624/domains/znam.fun/public_html/
+          cd /home/u3217624/domains/znam.fun/public_html
+          
+          # Останавливаем текущий процесс если он запущен
+          pm2 delete znam-whatsapp 2>/dev/null || true
           
           # Распаковываем архив
           unzip -o deploy.zip
-          rm deploy.zip
+          rm -f deploy.zip
           
           # Устанавливаем зависимости
           npm install --production
@@ -74,8 +78,7 @@ jobs:
             EOF
           fi
           
-          # Перезапускаем сервер
-          pm2 delete znam-whatsapp 2>/dev/null || true
+          # Запускаем сервер
           pm2 start ecosystem.config.js
           pm2 save
           
