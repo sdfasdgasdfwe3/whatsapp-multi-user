@@ -9,14 +9,23 @@ const path = require('path');
 const app = express();
 const port = 3001;
 
-app.use(cors());
+app.use(cors({
+    origin: ['http://znam.fun', 'https://znam.fun', 'http://www.znam.fun', 'https://www.znam.fun', 'http://localhost:3000', 'http://localhost:3001'],
+    credentials: true
+}));
 app.use(express.json());
 app.use(express.static('.'));
 
 // Логирование всех запросов
 app.use((req, res, next) => {
-    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.path} - Origin: ${req.headers.origin || 'unknown'}`);
     next();
+});
+
+// Обработка ошибок
+app.use((err, req, res, next) => {
+    console.error('Error:', err);
+    res.status(500).json({ error: 'Internal server error' });
 });
 
 // Загружаем базу данных
