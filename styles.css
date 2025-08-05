@@ -2954,4 +2954,52 @@ body {
     outline: none;
     border-color: #007bff;
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Стили для состояний загрузки и ошибок */
+.loading, .empty-state, .error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    color: #666;
+}
+
+.loading i, .empty-state i, .error-state i {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #007bff;
+}
+
+.empty-state i {
+    color: #6c757d;
+}
+
+.error-state i {
+    color: #dc3545;
+}
+
+.loading p, .empty-state p, .error-state p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.btn-retry {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.btn-retry:hover {
+    background: #0056b3;
 } 
