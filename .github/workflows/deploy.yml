@@ -1,4 +1,4 @@
-name: Deploy to znam.fun
+name: Deploy to znam.fun v2
 
 on:
   push:
