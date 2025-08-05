@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест сервера</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Тест сервера WhatsApp</h1>
+    
+    <div class="test-section info">
+        <h3>Информация о сервере</h3>
+        <p><strong>IP адрес:</strong> 89.104.66.62</p>
+        <p><strong>Порт API:</strong> 3001</p>
+        <p><strong>Время проверки:</strong> <span id="currentTime"></span></p>
+    </div>
+
+    <div class="test-section">
+        <h3>Проверка подключения к серверу</h3>
+        <button onclick="testServerConnection()">Проверить подключение</button>
+        <div id="serverStatus"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Проверка API авторизации</h3>
+        <button onclick="testAuthAPI()">Тест API авторизации</button>
+        <div id="authStatus"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Проверка базы данных</h3>
+        <button onclick="testDatabase()">Проверить базу данных</button>
+        <div id="databaseStatus"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Проверка WhatsApp API</h3>
+        <button onclick="testWhatsAppAPI()">Тест WhatsApp API</button>
+        <div id="whatsappStatus"></div>
+    </div>
+
+    <script>
+        // Показываем текущее время
+        document.getElementById('currentTime').textContent = new Date().toLocaleString('ru-RU');
+
+        async function testServerConnection() {
+            const statusDiv = document.getElementById('serverStatus');
+            statusDiv.innerHTML = '<p>Проверяем подключение...</p>';
+            
+            try {
+                const response = await fetch('http://89.104.66.62:3001/api/debug/database');
+                if (response.ok) {
+                    const data = await response.json();
+                    statusDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ Сервер работает!</h4>
+                            <p>Статус: ${response.status}</p>
+                            <p>Время ответа: ${response.headers.get('date') || 'Неизвестно'}</p>
+                        </div>
+                    `;
+                } else {
+                    statusDiv.innerHTML = `
+                        <div class="error">
+                            <h4>❌ Ошибка сервера</h4>
+                            <p>Статус: ${response.status}</p>
+                            <p>Статус текст: ${response.statusText}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ Не удалось подключиться к серверу</h4>
+                        <p>Ошибка: ${error.message}</p>
+                        <p>Возможные причины:</p>
+                        <ul>
+                            <li>Сервер не запущен</li>
+                            <li>Проблемы с сетевым подключением</li>
+                            <li>Блокировка CORS</li>
+                        </ul>
+                    </div>
+                `;
+            }
+        }
+
+        async function testAuthAPI() {
+            const statusDiv = document.getElementById('authStatus');
+            statusDiv.innerHTML = '<p>Тестируем API авторизации...</p>';
+            
+            try {
+                const response = await fetch('http://89.104.66.62:3001/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: 'admin',
+                        password: 'Alfred20002'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    statusDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ API авторизации работает!</h4>
+                            <p>Пользователь: ${data.user.fullName}</p>
+                            <p>Роль: ${data.user.role}</p>
+                        </div>
+                    `;
+                } else {
+                    statusDiv.innerHTML = `
+                        <div class="error">
+                            <h4>❌ Ошибка авторизации</h4>
+                            <p>Статус: ${response.status}</p>
+                            <p>Ответ: ${JSON.stringify(data)}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ Ошибка подключения к API</h4>
+                        <p>Ошибка: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testDatabase() {
+            const statusDiv = document.getElementById('databaseStatus');
+            statusDiv.innerHTML = '<p>Проверяем базу данных...</p>';
+            
+            try {
+                const response = await fetch('http://89.104.66.62:3001/api/debug/database');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    statusDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ База данных доступна!</h4>
+                            <p>Количество пользователей: ${data.users ? data.users.length : 0}</p>
+                            <p>Активные сессии WhatsApp: ${data.whatsappSessions ? Object.keys(data.whatsappSessions).length : 0}</p>
+                            <details>
+                                <summary>Детали базы данных</summary>
+                                <pre>${JSON.stringify(data, null, 2)}</pre>
+                            </details>
+                        </div>
+                    `;
+                } else {
+                    statusDiv.innerHTML = `
+                        <div class="error">
+                            <h4>❌ Ошибка доступа к базе данных</h4>
+                            <p>Статус: ${response.status}</p>
+                            <p>Ответ: ${JSON.stringify(data)}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ Не удалось проверить базу данных</h4>
+                        <p>Ошибка: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testWhatsAppAPI() {
+            const statusDiv = document.getElementById('whatsappStatus');
+            statusDiv.innerHTML = '<p>Тестируем WhatsApp API...</p>';
+            
+            try {
+                // Сначала проверим статус для админа
+                const response = await fetch('http://89.104.66.62:3001/api/whatsapp/status/1');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    statusDiv.innerHTML = `
+                        <div class="success">
+                            <h4>✅ WhatsApp API работает!</h4>
+                            <p>Статус подключения: ${data.isConnected ? 'Подключен' : 'Не подключен'}</p>
+                            <p>Инициализация: ${data.isInitializing ? 'В процессе' : 'Завершена'}</p>
+                            <p>QR код доступен: ${data.qrCodeData ? 'Да' : 'Нет'}</p>
+                            <details>
+                                <summary>Детали статуса</summary>
+                                <pre>${JSON.stringify(data, null, 2)}</pre>
+                            </details>
+                        </div>
+                    `;
+                } else {
+                    statusDiv.innerHTML = `
+                        <div class="error">
+                            <h4>❌ Ошибка WhatsApp API</h4>
+                            <p>Статус: ${response.status}</p>
+                            <p>Ответ: ${JSON.stringify(data)}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ Не удалось проверить WhatsApp API</h4>
+                        <p>Ошибка: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html> 
