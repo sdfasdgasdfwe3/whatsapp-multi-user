@@ -10,7 +10,7 @@
     "antd": "^5.0.0",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
-    "express": "^5.1.0",
+    "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.3",
     "qrcode": "^1.5.4",
@@ -31,7 +31,7 @@
     "api-server": "node start-server.js",
     "production": "node start-production.js",
     "check-server": "node check-server.js",
-    "simple-api": "node simple-api-server.js"
+    "test-server": "node test-server.js"
   },
   "eslintConfig": {
     "extends": [

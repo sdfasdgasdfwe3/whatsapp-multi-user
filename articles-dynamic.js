@@ -41,7 +41,7 @@ async function loadArticles() {
     const articlesGrid = document.getElementById('articlesGrid');
     
     try {
-        const response = await fetch('http://89.104.66.62:3003/api/articles');
+        const response = await fetch('http://89.104.66.62:3001/api/articles');
         const data = await response.json();
         
         if (data.success) {
