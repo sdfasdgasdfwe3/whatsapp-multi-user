@@ -386,13 +386,52 @@ function closeAddProductModal() {
     }
 }
 
-function editProduct(productId) {
-    showNotification('Функция редактирования товара будет добавлена позже', 'success');
+async function editProduct(productId) {
+    try {
+        // Получаем данные продукта
+        const response = await fetch(`http://89.104.66.62:3001/api/products/${productId}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            // Заполняем форму данными продукта
+            document.getElementById('productName').value = data.product.name;
+            document.getElementById('productPrice').value = data.product.price.replace('₽', '');
+            document.getElementById('productDescription').value = data.product.description;
+            
+            // Показываем модальное окно
+            showAddProductModal();
+            showNotification('Редактирование товара', 'success');
+        } else {
+            showNotification('Ошибка загрузки данных товара', 'error');
+        }
+    } catch (error) {
+        console.error('Error loading product:', error);
+        showNotification('Ошибка загрузки данных товара', 'error');
+    }
 }
 
-function deleteProduct(productId) {
+async function deleteProduct(productId) {
     if (confirm('Вы уверены, что хотите удалить этот товар?')) {
-        showNotification('Товар успешно удален', 'success');
+        try {
+            const response = await fetch(`http://89.104.66.62:3001/api/products/${productId}`, {
+                method: 'DELETE'
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showNotification('Товар успешно удален', 'success');
+                // Перезагружаем страницу
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            } else {
+                showNotification(data.error || 'Ошибка удаления товара', 'error');
+            }
+        } catch (error) {
+            console.error('Error deleting product:', error);
+            showNotification('Ошибка удаления товара', 'error');
+        }
     }
 }
 
@@ -516,7 +555,7 @@ function getSelectedChats() {
 document.addEventListener('DOMContentLoaded', function() {
     const addProductForm = document.getElementById('addProductForm');
     if (addProductForm) {
-        addProductForm.addEventListener('submit', function(e) {
+        addProductForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const name = document.getElementById('productName').value;
@@ -530,9 +569,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Здесь можно добавить логику сохранения товара
-            showNotification('Товар успешно добавлен!', 'success');
-            closeAddProductModal();
+            try {
+                // Формируем данные для отправки
+                const productData = {
+                    name: name,
+                    price: `₽${price}`,
+                    description: description,
+                    category: 'Другое', // Можно добавить поле категории в форму
+                    image: image ? await convertFileToBase64(image) : `https://via.placeholder.com/300x200?text=${encodeURIComponent(name)}`
+                };
+                
+                // Отправляем запрос на сервер
+                const response = await fetch('http://89.104.66.62:3001/api/products', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(productData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showNotification('Товар успешно добавлен!', 'success');
+                    closeAddProductModal();
+                    // Перезагружаем страницу для отображения нового товара
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    showNotification(data.error || 'Ошибка добавления товара', 'error');
+                }
+            } catch (error) {
+                console.error('Error adding product:', error);
+                showNotification('Ошибка добавления товара', 'error');
+            }
         });
     }
     
@@ -589,21 +660,69 @@ function closeAddArticleModal() {
     }
 }
 
-function editArticle(articleId) {
-    showNotification('Функция редактирования статьи будет добавлена позже', 'success');
+async function editArticle(articleId) {
+    try {
+        // Получаем данные статьи
+        const response = await fetch(`http://89.104.66.62:3001/api/articles/${articleId}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            // Заполняем форму данными статьи
+            document.getElementById('articleTitle').value = data.article.title;
+            document.getElementById('articleDescription').value = data.article.content;
+            
+            // Показываем модальное окно
+            showAddArticleModal();
+            showNotification('Редактирование статьи', 'success');
+        } else {
+            showNotification('Ошибка загрузки данных статьи', 'error');
+        }
+    } catch (error) {
+        console.error('Error loading article:', error);
+        showNotification('Ошибка загрузки данных статьи', 'error');
+    }
 }
 
-function deleteArticle(articleId) {
+async function deleteArticle(articleId) {
     if (confirm('Вы уверены, что хотите удалить эту статью?')) {
-        showNotification('Статья успешно удалена', 'success');
+        try {
+            const response = await fetch(`http://89.104.66.62:3001/api/articles/${articleId}`, {
+                method: 'DELETE'
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showNotification('Статья успешно удалена', 'success');
+                // Перезагружаем страницу
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            } else {
+                showNotification(data.error || 'Ошибка удаления статьи', 'error');
+            }
+        } catch (error) {
+            console.error('Error deleting article:', error);
+            showNotification('Ошибка удаления статьи', 'error');
+        }
     }
+}
+
+// Функция для конвертации файла в base64
+function convertFileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
 }
 
 // Обработка формы добавления статьи
 document.addEventListener('DOMContentLoaded', function() {
     const addArticleForm = document.getElementById('addArticleForm');
     if (addArticleForm) {
-        addArticleForm.addEventListener('submit', function(e) {
+        addArticleForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const title = document.getElementById('articleTitle').value;
@@ -615,9 +734,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Здесь можно добавить логику сохранения статьи
-            showNotification('Статья успешно добавлена!', 'success');
-            closeAddArticleModal();
+            try {
+                // Формируем данные для отправки
+                const articleData = {
+                    title: title,
+                    content: description,
+                    author: 'Автор', // Можно добавить поле автора в форму
+                    category: 'Общее', // Можно добавить поле категории в форму
+                    image: image ? await convertFileToBase64(image) : `https://via.placeholder.com/300x200?text=${encodeURIComponent(title)}`
+                };
+                
+                // Отправляем запрос на сервер
+                const response = await fetch('http://89.104.66.62:3001/api/articles', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(articleData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showNotification('Статья успешно добавлена!', 'success');
+                    closeAddArticleModal();
+                    // Перезагружаем страницу для отображения новой статьи
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    showNotification(data.error || 'Ошибка добавления статьи', 'error');
+                }
+            } catch (error) {
+                console.error('Error adding article:', error);
+                showNotification('Ошибка добавления статьи', 'error');
+            }
         });
     }
     
