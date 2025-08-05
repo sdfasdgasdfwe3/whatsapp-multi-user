@@ -89,8 +89,10 @@ async function generateQRCodeInline() {
         }
         
         // Получаем QR-код с сервера для конкретного пользователя
+        console.log('Requesting QR code for user:', currentUser.id);
         const response = await fetch(`/api/whatsapp/qr/${currentUser.id}`);
         const data = await response.json();
+        console.log('QR code response:', data);
         
         if (data.connected) {
             // Если уже подключен, показываем список чатов
@@ -103,8 +105,8 @@ async function generateQRCodeInline() {
             qrContainer.innerHTML = '';
             
             // Создаем QR-код как изображение
-    const qrCode = document.createElement('div');
-    qrCode.className = 'qr-code-placeholder-inline';
+            const qrCode = document.createElement('div');
+            qrCode.className = 'qr-code-placeholder-inline';
             
             const qrImage = document.createElement('img');
             qrImage.src = data.qrCode;
@@ -112,9 +114,16 @@ async function generateQRCodeInline() {
             qrImage.style.height = '200px';
             qrImage.style.borderRadius = '8px';
             qrImage.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+            qrImage.alt = 'QR Code for WhatsApp';
+            
+            // Добавляем обработчик ошибок загрузки изображения
+            qrImage.onerror = function() {
+                console.error('Failed to load QR code image');
+                qrContainer.innerHTML = '<p style="color: #ff6b6b; text-align: center;">Ошибка загрузки QR-кода</p>';
+            };
             
             qrCode.appendChild(qrImage);
-    qrContainer.appendChild(qrCode);
+            qrContainer.appendChild(qrCode);
     
             // Показываем уведомление
             showNotification('QR-код получен! Отсканируйте его в WhatsApp', 'info');
