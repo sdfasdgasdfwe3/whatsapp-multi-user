@@ -561,6 +561,90 @@ app.get('/api/debug/database', (req, res) => {
     }
 });
 
+// API для продуктов
+app.get('/api/products', (req, res) => {
+    try {
+        const db = loadDatabase();
+        res.json({ success: true, products: db.products || [] });
+    } catch (error) {
+        console.error('Error getting products:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.get('/api/products/:id', (req, res) => {
+    try {
+        const productId = parseInt(req.params.id);
+        const db = loadDatabase();
+        const product = (db.products || []).find(p => p.id === productId);
+        
+        if (!product) {
+            return res.status(404).json({ success: false, error: 'Product not found' });
+        }
+        
+        res.json({ success: true, product });
+    } catch (error) {
+        console.error('Error getting product:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// API для статей
+app.get('/api/articles', (req, res) => {
+    try {
+        const db = loadDatabase();
+        res.json({ success: true, articles: db.articles || [] });
+    } catch (error) {
+        console.error('Error getting articles:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.get('/api/articles/:id', (req, res) => {
+    try {
+        const articleId = parseInt(req.params.id);
+        const db = loadDatabase();
+        const article = (db.articles || []).find(a => a.id === articleId);
+        
+        if (!article) {
+            return res.status(404).json({ success: false, error: 'Article not found' });
+        }
+        
+        res.json({ success: true, article });
+    } catch (error) {
+        console.error('Error getting article:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// API для акций
+app.get('/api/promotions', (req, res) => {
+    try {
+        const db = loadDatabase();
+        res.json({ success: true, promotions: db.promotions || [] });
+    } catch (error) {
+        console.error('Error getting promotions:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.get('/api/promotions/:id', (req, res) => {
+    try {
+        const promotionId = parseInt(req.params.id);
+        const db = loadDatabase();
+        const promotion = (db.promotions || []).find(p => p.id === promotionId);
+        
+        if (!promotion) {
+            return res.status(404).json({ success: false, error: 'Promotion not found' });
+        }
+        
+        res.json({ success: true, promotion });
+    } catch (error) {
+        console.error('Error getting promotion:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 app.listen(port, () => {
     console.log(`Multi-user WhatsApp server running on port ${port}`);
 }); 
