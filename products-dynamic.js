@@ -41,7 +41,7 @@ async function loadProducts() {
     const productsGrid = document.getElementById('productsGrid');
     
     try {
-        const response = await fetch('http://89.104.66.62:3001/api/products');
+        const response = await fetch('http://89.104.66.62:3003/api/products');
         const data = await response.json();
         
         if (data.success) {
