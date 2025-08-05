@@ -29,21 +29,21 @@ async function checkWhatsAppStatus() {
             return;
         }
         
-        const response = await fetch(`http://localhost:3001/api/whatsapp/status/${currentUser.id}`);
+        const response = await fetch(`/api/whatsapp/status/${currentUser.id}`);
         const data = await response.json();
         
         whatsappConnected = data.connected;
     
         // Показываем блоки чатов только на главной странице
         if (window.location.pathname.includes('home.html') || window.location.pathname === '/') {
-            if (whatsappConnected) {
+    if (whatsappConnected) {
                 localStorage.setItem('whatsappConnected', 'true');
-                showChatsListInline();
-            } else {
+        showChatsListInline();
+    } else {
                 localStorage.removeItem('whatsappConnected');
-                showWhatsAppConnectInline();
-            }
-        }
+        showWhatsAppConnectInline();
+    }
+}
     } catch (error) {
         console.error('Error checking WhatsApp status:', error);
         // Если сервер недоступен, показываем блок подключения только на главной странице
@@ -89,7 +89,7 @@ async function generateQRCodeInline() {
         }
         
         // Получаем QR-код с сервера для конкретного пользователя
-        const response = await fetch(`http://localhost:3001/api/whatsapp/qr/${currentUser.id}`);
+        const response = await fetch(`/api/whatsapp/qr/${currentUser.id}`);
         const data = await response.json();
         
         if (data.connected) {
@@ -127,12 +127,12 @@ async function generateQRCodeInline() {
                     return;
                 }
                 
-                const statusResponse = await fetch(`http://localhost:3001/api/whatsapp/status/${currentUser.id}`);
+                const statusResponse = await fetch(`/api/whatsapp/status/${currentUser.id}`);
                 const statusData = await statusResponse.json();
                 
                 if (statusData.connected) {
                     clearInterval(checkInterval);
-                    simulateWhatsAppConnection();
+        simulateWhatsAppConnection();
                 }
             }, 2000);
             
@@ -171,23 +171,23 @@ async function disconnectWhatsApp() {
             return;
         }
         
-        const response = await fetch(`http://localhost:3001/api/whatsapp/disconnect/${currentUser.id}`, {
+        const response = await fetch(`/api/whatsapp/disconnect/${currentUser.id}`, {
             method: 'POST'
         });
         const data = await response.json();
         
         if (data.success) {
-            whatsappConnected = false;
-            localStorage.removeItem('whatsappConnected');
-            
-            // Показываем уведомление
-            showNotification('WhatsApp отключен', 'info');
-            
-            // Переключаемся на блок подключения
-            showWhatsAppConnectInline();
-            
-            // Обновляем статус на главной странице
-            updateMainPageStatus();
+    whatsappConnected = false;
+    localStorage.removeItem('whatsappConnected');
+    
+    // Показываем уведомление
+    showNotification('WhatsApp отключен', 'info');
+    
+    // Переключаемся на блок подключения
+    showWhatsAppConnectInline();
+    
+    // Обновляем статус на главной странице
+    updateMainPageStatus();
         } else {
             showNotification('Ошибка отключения WhatsApp', 'error');
         }
@@ -248,7 +248,7 @@ async function loadChatsInline() {
         
         console.log('Loading chats from server for user:', currentUser.id);
         // Получаем реальные чаты с сервера для конкретного пользователя
-        const response = await fetch(`http://localhost:3001/api/whatsapp/chats/${currentUser.id}`);
+        const response = await fetch(`/api/whatsapp/chats/${currentUser.id}`);
         const data = await response.json();
         
         console.log('Server response:', data);
@@ -307,19 +307,19 @@ async function loadChatsInline() {
             chatsGrid.innerHTML = '';
             
             // Отображаем чаты
-            chats.forEach(chat => {
-                const chatCard = createChatCardInline(chat);
-                chatsGrid.appendChild(chatCard);
-            });
-            
+    chats.forEach(chat => {
+        const chatCard = createChatCardInline(chat);
+        chatsGrid.appendChild(chatCard);
+    });
+    
             // Отображаем группы
-            groups.forEach(group => {
-                const groupCard = createGroupCardInline(group);
-                chatsGrid.appendChild(groupCard);
-            });
-            
-            // Обновляем счетчик
-            updateSelectedCountInline();
+    groups.forEach(group => {
+        const groupCard = createGroupCardInline(group);
+        chatsGrid.appendChild(groupCard);
+    });
+    
+    // Обновляем счетчик
+    updateSelectedCountInline();
             
         } else {
             chatsGrid.innerHTML = '<div class="empty-state"><i class="fas fa-comments"></i><p>Нет доступных чатов</p></div>';
@@ -608,7 +608,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Показываем QR-код по умолчанию только на главной странице
     if (window.location.pathname.includes('home.html') || window.location.pathname === '/') {
-        generateQRCodeInline();
+    generateQRCodeInline();
     }
 });
 
@@ -623,12 +623,12 @@ async function updateMainPageStatus() {
                 return;
             }
             
-            const response = await fetch(`http://localhost:3001/api/whatsapp/status/${currentUser.id}`);
+            const response = await fetch(`/api/whatsapp/status/${currentUser.id}`);
             const data = await response.json();
             
             if (data.connected) {
-                statusElement.innerHTML = '<span class="status-connected">Подключен</span>';
-            } else {
+            statusElement.innerHTML = '<span class="status-connected">Подключен</span>';
+        } else {
                 statusElement.innerHTML = '<span class="status-disconnected">Не подключен</span>';
             }
         } catch (error) {

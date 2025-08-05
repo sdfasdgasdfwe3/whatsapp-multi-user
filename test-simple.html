@@ -81,7 +81,7 @@
                 statusDiv.textContent = 'Проверка статуса...';
                 statusDiv.className = 'status info';
                 
-                const response = await fetch('http://localhost:3001/api/whatsapp/status');
+                const response = await fetch('/api/whatsapp/status');
                 const data = await response.json();
                 
                 statusDiv.textContent = 'Статус получен';
@@ -107,7 +107,7 @@
                 statusDiv.textContent = 'Загрузка чатов...';
                 statusDiv.className = 'status info';
                 
-                const response = await fetch('http://localhost:3001/api/whatsapp/chats');
+                const response = await fetch('/api/whatsapp/chats');
                 const data = await response.json();
                 
                 statusDiv.textContent = 'Чаты загружены';
@@ -133,7 +133,7 @@
                 statusDiv.textContent = 'Отправка сообщения...';
                 statusDiv.className = 'status info';
                 
-                const response = await fetch('http://localhost:3001/api/whatsapp/send', {
+                const response = await fetch('/api/whatsapp/send', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -169,7 +169,7 @@
                 statusDiv.textContent = 'Перезапуск...';
                 statusDiv.className = 'status info';
                 
-                const response = await fetch('http://localhost:3001/api/whatsapp/restart', {
+                const response = await fetch('/api/whatsapp/restart', {
                     method: 'POST'
                 });
                 

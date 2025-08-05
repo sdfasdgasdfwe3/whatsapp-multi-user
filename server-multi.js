@@ -13,6 +13,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
 
+// Логирование всех запросов
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    next();
+});
+
 // Загружаем базу данных
 function loadDatabase() {
     try {
@@ -207,16 +213,22 @@ function createWhatsAppClient(userId) {
 
 // Аутентификация пользователя
 app.post('/api/auth/login', (req, res) => {
+    console.log('Login attempt:', { username: req.body.username, password: req.body.password ? '***' : 'missing' });
+    
     const { username, password } = req.body;
     const db = loadDatabase();
+    
+    console.log('Database loaded, users count:', db.users.length);
     
     const user = db.users.find(u => u.username === username && u.password === password);
     
     if (user) {
+        console.log('User found:', { id: user.id, username: user.username, fullName: user.fullName });
         // Убираем пароль из ответа
         const { password, ...userWithoutPassword } = user;
         res.json({ success: true, user: userWithoutPassword });
     } else {
+        console.log('User not found or invalid password');
         res.status(401).json({ success: false, error: 'Invalid credentials' });
     }
 });
